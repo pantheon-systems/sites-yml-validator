@@ -1,0 +1,21 @@
+---
+project_name: pyml-validator
+
+# don't compile anything
+builds:
+  - skip: true # TODO: Build for releases.
+
+# configure what shows up in the changelog
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
+
+# make a zip of the source
+# https://goreleaser.com/customization/source/
+source:
+  enabled: true

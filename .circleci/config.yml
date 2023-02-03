@@ -1,0 +1,98 @@
+---
+version: 2.1
+
+executors:
+  go-build:
+    docker:
+      - image: quay.io/getpantheon/go-build
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASSWD
+
+commands:
+  save-go-mod-cache:
+    steps:
+      - save_cache:
+          key: v4-dependencies-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod
+            - /home/circleci/go/pkg/mod
+  restore-go-mod-cache:
+    steps:
+      - restore_cache:
+          keys:
+            - v4-dependencies-{{ checksum "go.sum" }}
+
+  # By default, CircleCI uses ssh, and authenticates as a user with read access to projects, but not write access.
+  # In order for `git push` command to work, we need to have CircleCI use HTTPS with the provided oauth token
+  # instead of ssh (the token is for pantheon-releases which has write access, but the default circle user does not)
+  configure-https-git:
+    steps:
+      - run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/pantheon-systems/".insteadOf "git@github.com:pantheon-systems/"
+
+jobs:
+  update-mod-cache:
+    executor: go-build
+    steps:
+      - checkout
+      - restore-go-mod-cache
+      - run: go mod download
+      - save-go-mod-cache
+  # build all the code
+  build:
+    executor: go-build
+    steps:
+      - checkout
+      - restore-go-mod-cache
+      - run: make build
+  # Tests the code
+  test:
+    executor: go-build
+    steps:
+      - checkout
+      - restore-go-mod-cache
+      - run:
+          name: lint and test
+          command: make test-circle
+  # Tag for release
+  release:
+    executor: go-build
+    steps:
+      - checkout
+      - configure-https-git
+      - run: autotag
+      - run: git push --tags
+      - run:
+          name: go releaser
+          command: curl -sL https://git.io/goreleaser | bash -s -- --parallelism=2
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - update-mod-cache:
+          context:
+            - docker-executor-auth
+            - sig-go-project
+      - build:
+          context:
+            - docker-executor-auth
+            - sig-go-project
+          requires:
+            - update-mod-cache
+      - test:
+          context:
+            - docker-executor-auth
+            - sig-go-project
+          requires:
+            - update-mod-cache
+      - release:
+          context:
+            - docker-executor-auth
+            - sig-go-release
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main

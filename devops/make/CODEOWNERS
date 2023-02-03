@@ -1,0 +1,7 @@
+# https://help.github.com/en/articles/about-code-owners
+
+* @pantheon-systems/engops
+
+# owned by #sig-go
+*.go         @pantheon-systems/sig-go
+common-go.mk @pantheon-systems/sig-go
