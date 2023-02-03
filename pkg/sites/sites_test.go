@@ -3,6 +3,7 @@ package sites
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -152,18 +153,25 @@ func TestValidateFromYaml(t *testing.T) {
 		expected error
 	}{
 		{
-			name:     "only api_version",
-			yaml:     `api_version: 1`,
+			name: "only api_version",
+			yaml: `
+			---
+			api_version: 1`,
 			expected: nil,
 		},
 		{
-			name:     "invalid api_version ",
-			yaml:     `api_version: 2`,
+			name: "invalid api_version ",
+			yaml: `
+			---
+			api_version: 2`,
 			expected: errors.New("Invalid API Version. Must be '1'"),
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			yaml := []byte(tc.yaml)
+			yaml := []byte(
+				// Yaml doesn't like tabs, but lets us make our test cases prettier
+				strings.ReplaceAll(tc.yaml, "\t", ""),
+			)
 			err := ValidateFromYaml(yaml)
 			if tc.expected == nil {
 				assert.NoError(t, err)
