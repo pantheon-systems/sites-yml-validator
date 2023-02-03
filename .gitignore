@@ -1,0 +1,6 @@
+.DS_Store
+
+common_makefiles
+shellcheck
+*.swp
+/common-make
