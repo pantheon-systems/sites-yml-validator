@@ -1,0 +1,95 @@
+#
+# This circle.yml builds and tests the utilities in common-makefiles
+# and should not be used as a template for your project.
+#
+---
+version: 2.1
+
+executors:
+  go-build:
+    docker:
+      - image: quay.io/getpantheon/go-build:latest
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASSWD
+
+  deploy-toolbox:
+    docker:
+      - image: us-docker.pkg.dev/pantheon-artifacts/internal/deploy-toolbox:latest
+        auth:
+          username: _json_key
+          password: $CIRCLE_CI_COMMON_KEY
+
+commands:
+  # By default, CircleCI uses ssh, and authenticates as a user with read access to projects, but not write access.
+  # In order for `git push` command to work, we need to have CircleCI use HTTPS with the provided oauth token
+  # instead of ssh (the token is for pantheon-releases which has write access, but the default circle user does not)
+  configure-https-git:
+    steps:
+      - run:
+          name: configure github auth
+          command: |
+            # netrc is the preferred way to authenticate and download private go modules
+            echo "machine github.com login $GITHUB_TOKEN" > ~/.netrc
+            git config --global --unset url.ssh://git@github.com.insteadof
+            git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/pantheon-systems/".insteadOf "git@github.com:pantheon-systems/"
+
+jobs:
+  test-build:
+    executor: go-build
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: make test-deps-build
+      - run: make test-common-build
+
+  test-deploy:
+    executor: deploy-toolbox
+    steps:
+      - checkout
+      - run: make test-deps-deploy
+      - run: make test-common-deploy
+
+  test-artifact-setup:
+    docker:
+      - image: cimg/go:1.17
+    steps:
+      - checkout
+      - run: make test-vault-gsa-setup
+
+  autotag-release:
+    executor: deploy-toolbox
+    steps:
+      - checkout
+      - configure-https-git
+      - run:
+          name: increment version
+          command: |
+            VERSION_TAG=$(autotag) && git push origin "v${VERSION_TAG}"
+
+workflows:
+  version: 2
+  primary:
+    jobs:
+      - test-build:
+          context:
+            - sig-go-release
+            - docker-executor-auth
+      - test-deploy:
+          context:
+            - sig-go-release
+            - docker-executor-auth
+            - gcp-credentials-ar-ci
+      - test-artifact-setup:
+          context:
+            - sig-go-release
+            - docker-executor-auth
+      - autotag-release:
+          context:
+            - sig-go-release
+            - docker-executor-auth
+            - gcp-credentials-ar-ci
+          filters:
+            branches:
+              only:
+                - master
