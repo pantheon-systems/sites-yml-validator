@@ -13,10 +13,7 @@ var rootCmd = &cobra.Command{
   Use:   "pymlv",
   Short: "Pymlv is a validator for sites.yml, pantheon.yml, etc.",
   Long:  ``,
-  RunE: func(cmd *cobra.Command, args []string) error {
-    fmt.Println("Foo")
-    return nil
-  },
+  Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 func Execute() {

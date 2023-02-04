@@ -16,7 +16,7 @@ var sitesCommand = &cobra.Command{
 	Use:   "sites",
 	Short: "validate sites.yml",
 	Long:  `Validate sites.yml`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Validate sites.yml")
 		if FilePath != "" {
 			fmt.Printf(fmt.Sprintf("At Path %q\n", FilePath))
@@ -25,10 +25,10 @@ var sitesCommand = &cobra.Command{
 		yFile, err := os.ReadFile(FilePath)
 		if err != nil {
 			fmt.Printf("Error reading YAML file: %s\n", err)
-			return err
+			return
 		}
 
 		err = sites.ValidateFromYaml(yFile)
-		return err
+		return
 	},
 }
