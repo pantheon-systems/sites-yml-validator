@@ -1,7 +1,6 @@
 package sites
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 
@@ -13,11 +12,9 @@ const (
 )
 
 var (
-	ValidMultidevNameRegex = regexp.MustCompile(`^[a-z0-9\-]{1,11}$`)
 	// See https://github.com/pantheon-systems/titan-mt/blob/master/yggdrasil/lib/pantheon_yml/pantheon_yml_v1_schema.py
-	ValidHostnameRegex = regexp.MustCompile(`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`)
-
-	ErrInvalidAPIVersion = errors.New("Invalid API Version. Must be '1'")
+	ValidHostnameRegex     = regexp.MustCompile(`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`)
+	ValidMultidevNameRegex = regexp.MustCompile(`^[a-z0-9\-]{1,11}$`)
 )
 
 // SitesYml is used to map domains across environments for search and replace with WPMS sites.
