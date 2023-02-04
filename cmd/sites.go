@@ -19,7 +19,7 @@ var sitesCommand = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Validate sites.yml")
 		if FilePath != "" {
-			fmt.Println(fmt.Sprintf("At Path %q", FilePath))
+			fmt.Printf(fmt.Sprintf("At Path %q\n", FilePath))
 		}
 
 		yFile, err := os.ReadFile(FilePath)
