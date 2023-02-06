@@ -1,0 +1,19 @@
+---
+api_version: 1
+domain_maps:
+  dev:
+    1: about.dev-mysite.pantheonsite.io  
+    2: employee-resources.dev-mysite.pantheonsite.io  
+    3: staff-portal.dev-mysite.pantheonsite.io  
+  test:
+    1: about.dev-mysite.pantheonsite.io
+    2: employee-resources.dev-mysite.pantheonsite.io
+    3: staff-portal.dev-mysite.pantheonsite.io
+  live:
+    1: about.mysite.com
+    2: employee-resources.mysite.com
+    3: staff-portal.mysite.com
+  autopilot:
+    1: about.autopilot-mysite.pantheonsite.io
+    2: employee-resources.autopilot-mysite.pantheonsite.io
+    3: staff-portal.autopilot-mysite.pantheonsite.io

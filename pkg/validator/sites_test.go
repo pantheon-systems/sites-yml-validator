@@ -231,6 +231,9 @@ func TestValidateFromFilePath(t *testing.T) {
 			"sites", "valid_api_version_only", nil,
 		},
 		{
+			"sites", "valid", nil,
+		},
+		{
 			"sites", "this_file_does_not_exist", errors.New(
 				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
