@@ -233,11 +233,9 @@ func TestValidateFromFilePath(t *testing.T) {
 			"valid_api_version_only", nil,
 		},
 		{
-			"invalid_yaml", &yaml.TypeError{
-				Errors: []string{
-					"line 1: cannot unmarshal !!str `this is...` into model.SitesYml",
-				},
-			},
+			"this_file_does_not_exist", errors.New(
+				"error reading YAML file: open ../../fixtures/this_file_does_not_exist.yml: no such file or directory",
+			),
 		},
 	} {
 		t.Run(tc.fixtureName, func(t *testing.T) {
