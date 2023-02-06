@@ -2,3 +2,5 @@
 /pyml-validator.yml
 
 .DS_Store
+
+dist/
