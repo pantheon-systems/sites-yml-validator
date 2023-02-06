@@ -4,8 +4,10 @@ A utility for validating a sites.yml file on a pantheon site during WordPress mu
 
 # Testing
 
+[![Coverage Status](https://coveralls.io/repos/github/pantheon-systems/pyml-validator/badge.svg?t=PGhafd)](https://coveralls.io/github/pantheon-systems/pyml-validator)
+
 `make test` runs linting and testing.
 
 # Releases
 
-Automatically releases on merge to main via autotag + goreleaser. See [Autotag Readme](https://github.com/pantheon-systems/autotag) for details on how the SemVer is determined.
+Automatically releases on merge to main via autotag + goreleaser. See [Autotag Readme](https://github.com/pantheon-systems/autotag) for details on how the SemVer is determined. Note, with goreleaser, each commit merged will become a line item in the release's Changelog. Take note to use squashing and/or rebase to ensure helpful and informative commit messages.
