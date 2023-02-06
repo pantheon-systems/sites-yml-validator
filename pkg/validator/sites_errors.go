@@ -1,4 +1,4 @@
-package sites
+package validator
 
 import "errors"
 

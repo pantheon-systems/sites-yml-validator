@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"pyml-validator/pkg/sites"
+	"pyml-validator/pkg/validator"
 
 	"github.com/spf13/cobra"
 )
@@ -16,19 +15,19 @@ var sitesCommand = &cobra.Command{
 	Use:   "sites",
 	Short: "validate sites.yml",
 	Long:  `Validate sites.yml`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Validate sites.yml")
-		if FilePath != "" {
-			fmt.Printf(fmt.Sprintf("At Path %q\n", FilePath))
-		}
+	RunE: func(cmd *cobra.Command, args []string) error {
+		// Is there a better way to do this? Without this we print usage on error exits.
+		// If we override at the root level, we don't get usage when we _do_ want it.
+		cmd.SilenceUsage = true
 
-		yFile, err := os.ReadFile(FilePath)
+		v := validator.NewSitesVaidator()
+		err := v.ValidateFromFilePath(FilePath)
+
 		if err != nil {
-			fmt.Printf("Error reading YAML file: %s\n", err)
-			return
+			return err
 		}
 
-		err = sites.ValidateFromYaml(yFile)
-		return
+		fmt.Println("✨ sites.yml is valid")
+		return nil
 	},
 }

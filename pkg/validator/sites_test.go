@@ -1,13 +1,20 @@
-package sites
+package validator
 
 import (
 	"errors"
 	"fmt"
+	"pyml-validator/pkg/model"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestNewSitesVaidator(t *testing.T) {
+	sv := NewSitesVaidator()
+
+	assert.Equal(t, sv, &SitesValidator{})
+}
 
 func TestValidateAPIVersion(t *testing.T) {
 	for _, tc := range []struct {
@@ -27,34 +34,34 @@ func TestValidateAPIVersion(t *testing.T) {
 func TestValidate(t *testing.T) {
 	for _, tc := range []struct {
 		name     string
-		sitesYml SitesYml
+		sitesYml model.SitesYml
 		expected error
 	}{
 		{
 			"valid only api version",
-			SitesYml{APIVersion: 1},
+			model.SitesYml{APIVersion: 1},
 			nil,
 		},
 		{
 			"invalid api version",
-			SitesYml{APIVersion: 2},
+			model.SitesYml{APIVersion: 2},
 			ErrInvalidAPIVersion,
 		},
 		{
 			"valid domain maps",
-			SitesYml{
+			model.SitesYml{
 				APIVersion: 1,
-				DomainMaps: DomainMaps{
-					"dev": DomainMapByEnvironment{
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
 						1: "blog1.dev-mysite.pantheonsite.io",
 					},
-					"test": DomainMapByEnvironment{
+					"test": model.DomainMapByEnvironment{
 						1: "blog1.dev-mysite.pantheonsite.io",
 					},
-					"live": DomainMapByEnvironment{
+					"live": model.DomainMapByEnvironment{
 						1: "blog1.mysite.com",
 					},
-					"autopilot": DomainMapByEnvironment{
+					"autopilot": model.DomainMapByEnvironment{
 						1: "blog1.autopilot-mysite.pantheonsite.io",
 					},
 				},
@@ -63,13 +70,13 @@ func TestValidate(t *testing.T) {
 		},
 		{
 			"invalid domain maps long env",
-			SitesYml{
+			model.SitesYml{
 				APIVersion: 1,
-				DomainMaps: DomainMaps{
-					"dev": DomainMapByEnvironment{
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
 						1: "blog1.dev-mysite.pantheonsite.io",
 					},
-					"mylongmultidevname": DomainMapByEnvironment{
+					"mylongmultidevname": model.DomainMapByEnvironment{
 						1: "blog1.mylongmultidevname-mysite.pantheonsite.io",
 					},
 				},
@@ -78,13 +85,13 @@ func TestValidate(t *testing.T) {
 		},
 		{
 			"invalid domain maps bad env name",
-			SitesYml{
+			model.SitesYml{
 				APIVersion: 1,
-				DomainMaps: DomainMaps{
-					"dev": DomainMapByEnvironment{
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
 						1: "blog1.dev-mysite.pantheonsite.io",
 					},
-					"feat_branch": DomainMapByEnvironment{
+					"feat_branch": model.DomainMapByEnvironment{
 						1: "blog1.feat-branch-mysite.pantheonsite.io",
 					},
 				},
@@ -93,10 +100,10 @@ func TestValidate(t *testing.T) {
 		},
 		{
 			"invalid domain maps too many domains",
-			SitesYml{
+			model.SitesYml{
 				APIVersion: 1,
-				DomainMaps: DomainMaps{
-					"dev": DomainMapByEnvironment{
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
 						1:  "blog1.dev-mysite.pantheonsite.io",
 						2:  "blog2.dev-mysite.pantheonsite.io",
 						3:  "blog3.dev-mysite.pantheonsite.io",
@@ -127,7 +134,7 @@ func TestValidate(t *testing.T) {
 						28: "blog28.dev-mysite.pantheonsite.io",
 						29: "blog29.dev-mysite.pantheonsite.io",
 					},
-					"feat_branch": DomainMapByEnvironment{
+					"feat_branch": model.DomainMapByEnvironment{
 						1: "blog1.feat-branch-mysite.pantheonsite.io",
 					},
 				},
@@ -136,7 +143,8 @@ func TestValidate(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			err := validate(tc.sitesYml)
+			v := NewSitesVaidator()
+			err := v.(*SitesValidator).validate(tc.sitesYml)
 			if tc.expected == nil {
 				assert.NoError(t, err)
 				return
@@ -164,7 +172,7 @@ func TestValidateFromYaml(t *testing.T) {
 			yaml: `
 			---
 			api_version: 2`,
-			expected: errors.New("Invalid API Version. Must be '1'"),
+			expected: ErrInvalidAPIVersion,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -172,11 +180,41 @@ func TestValidateFromYaml(t *testing.T) {
 				// Yaml doesn't like tabs, but lets us make our test cases prettier
 				strings.ReplaceAll(tc.yaml, "\t", ""),
 			)
-			err := ValidateFromYaml(yaml)
+
+			v := NewSitesVaidator()
+			err := v.ValidateFromYaml(yaml)
 			if tc.expected == nil {
 				assert.NoError(t, err)
 				return
 			}
+			// TODO: assert.ErrorIs would be a better test.
+			assert.EqualError(t, err, tc.expected.Error())
+		})
+	}
+}
+
+func TestValidateFromFilePath(t *testing.T) {
+	for _, tc := range []struct {
+		fixtureName string
+		expected    error
+	}{
+		{
+			"invalid_api_version_only", ErrInvalidAPIVersion,
+		},
+		{
+			"valid_api_version_only", nil,
+		},
+	} {
+		t.Run(tc.fixtureName, func(t *testing.T) {
+			v := NewSitesVaidator()
+			filePath := fmt.Sprintf("../../fixtures/%s.yml", tc.fixtureName)
+			err := v.ValidateFromFilePath(filePath)
+			if tc.expected == nil {
+				assert.NoError(t, err)
+				return
+			}
+
+			// TODO: assert.ErrorIs would be a better test.
 			assert.EqualError(t, err, tc.expected.Error())
 		})
 	}
