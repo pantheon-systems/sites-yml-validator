@@ -1,6 +1,8 @@
 package validator
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Validator interface {
 	ValidateFromYaml(y []byte) error

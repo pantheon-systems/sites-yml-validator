@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"errors"
 	"fmt"
 	"os"
 )
@@ -9,8 +8,9 @@ import (
 type PantheonValidator struct{}
 
 // ValidateFromYaml asserts a given pantheon.yaml file is valid.
+// As this has not been implemented, nothing is invalid.
 func (v *PantheonValidator) ValidateFromYaml(y []byte) error {
-	return errors.New("Not yet implemented")
+	return nil
 }
 
 func (v *PantheonValidator) ValidateFromFilePath(filePath string) error {
