@@ -8,14 +8,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 )
-
-func TestNewSitesVaidator(t *testing.T) {
-	sv := NewSitesVaidator()
-
-	assert.Equal(t, sv, &SitesValidator{})
-}
 
 func TestValidateAPIVersion(t *testing.T) {
 	for _, tc := range []struct {
@@ -162,8 +157,9 @@ func TestValidate(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			v := NewSitesVaidator()
-			err := v.(*SitesValidator).validate(tc.sitesYml)
+			v, err := ValidatorFactory("sites")
+			require.NoError(t, err)
+			err = v.(*SitesValidator).validate(tc.sitesYml)
 			if tc.expected == nil {
 				assert.NoError(t, err)
 				return
@@ -209,8 +205,9 @@ func TestValidateFromYaml(t *testing.T) {
 				strings.ReplaceAll(tc.yaml, "\t", ""),
 			)
 
-			v := NewSitesVaidator()
-			err := v.ValidateFromYaml(yaml)
+			v, err := ValidatorFactory("sites")
+			require.NoError(t, err)
+			err = v.ValidateFromYaml(yaml)
 			if tc.expected == nil {
 				assert.NoError(t, err)
 				return
@@ -223,25 +220,29 @@ func TestValidateFromYaml(t *testing.T) {
 
 func TestValidateFromFilePath(t *testing.T) {
 	for _, tc := range []struct {
+		validator   string
 		fixtureName string
 		expected    error
 	}{
 		{
-			"invalid_api_version_only", ErrInvalidAPIVersion,
+			"sites", "invalid_api_version_only", ErrInvalidAPIVersion,
 		},
 		{
-			"valid_api_version_only", nil,
+			"sites", "valid_api_version_only", nil,
 		},
 		{
-			"this_file_does_not_exist", errors.New(
-				"error reading YAML file: open ../../fixtures/this_file_does_not_exist.yml: no such file or directory",
+			"sites", "this_file_does_not_exist", errors.New(
+				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
 		},
 	} {
-		t.Run(tc.fixtureName, func(t *testing.T) {
-			v := NewSitesVaidator()
-			filePath := fmt.Sprintf("../../fixtures/%s.yml", tc.fixtureName)
-			err := v.ValidateFromFilePath(filePath)
+		fxTestPathName := fmt.Sprintf(`%s/%s`, tc.validator, tc.fixtureName)
+		t.Run(fxTestPathName, func(t *testing.T) {
+			v, err := ValidatorFactory(tc.validator)
+			require.NoError(t, err)
+			filePath := fmt.Sprintf("../../fixtures/%s.yml", fxTestPathName)
+
+			err = v.ValidateFromFilePath(filePath)
 			if tc.expected == nil {
 				assert.NoError(t, err)
 				return

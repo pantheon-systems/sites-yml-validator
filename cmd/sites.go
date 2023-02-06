@@ -20,8 +20,12 @@ var sitesCommand = &cobra.Command{
 		// If we override at the root level, we don't get usage when we _do_ want it.
 		cmd.SilenceUsage = true
 
-		v := validator.NewSitesVaidator()
-		err := v.ValidateFromFilePath(FilePath)
+		v, err := validator.ValidatorFactory("sites")
+		if err != nil {
+			return err
+		}
+
+		err = v.ValidateFromFilePath(FilePath)
 
 		if err != nil {
 			return err

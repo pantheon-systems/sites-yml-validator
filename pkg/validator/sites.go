@@ -21,11 +21,6 @@ var (
 
 type SitesValidator struct{}
 
-// NewSitesValidator constructs a new SitesValidator method.
-func NewSitesVaidator() Validator {
-	return &SitesValidator{}
-}
-
 // ValidateFromYaml asserts a given sites.yaml file is valid.
 func (v *SitesValidator) ValidateFromYaml(y []byte) error {
 	var s model.SitesYml
