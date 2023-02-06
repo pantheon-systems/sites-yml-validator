@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v3"
 )
 
 func TestNewSitesVaidator(t *testing.T) {
@@ -141,6 +142,24 @@ func TestValidate(t *testing.T) {
 			},
 			errors.New(`"dev" has too many domains listed. Maximum is 25`),
 		},
+		{
+			"invalid hostname",
+			model.SitesYml{
+				APIVersion: 1,
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
+						1: "blog1.dev-mysite.pantheonsite.io",
+					},
+					"test": model.DomainMapByEnvironment{
+						1: "$(sudo do something dangerous)",
+					},
+					"live": model.DomainMapByEnvironment{
+						1: "blog1.mysite.com",
+					},
+				},
+			},
+			errors.New(`"$(sudo do something dangerous)" is not a valid hostname`),
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			v := NewSitesVaidator()
@@ -174,6 +193,15 @@ func TestValidateFromYaml(t *testing.T) {
 			api_version: 2`,
 			expected: ErrInvalidAPIVersion,
 		},
+		{
+			name: "invalid api_version ",
+			yaml: `this is not good yaml`,
+			expected: &yaml.TypeError{
+				Errors: []string{
+					"line 1: cannot unmarshal !!str `this is...` into model.SitesYml",
+				},
+			},
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			yaml := []byte(
@@ -203,6 +231,13 @@ func TestValidateFromFilePath(t *testing.T) {
 		},
 		{
 			"valid_api_version_only", nil,
+		},
+		{
+			"invalid_yaml", &yaml.TypeError{
+				Errors: []string{
+					"line 1: cannot unmarshal !!str `this is...` into model.SitesYml",
+				},
+			},
 		},
 	} {
 		t.Run(tc.fixtureName, func(t *testing.T) {
