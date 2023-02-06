@@ -2,6 +2,20 @@
 
 A utility for validating a sites.yml file on a pantheon site during WordPress multisites' search-replace tasks. Asprirationally to include pantheon.yml validation in the future.
 
+# Usage
+
+
+## Sites.yml
+```
+$ pyml-validator sites -f path/to/sites.yml
+```
+
+## Pantheon.yml
+Note, validation of pantheon.yml is unimplemented, so any file reads as valid.
+```
+$ pyml-validator pantheon -f path/to/pantheon.yml
+```
+
 # Testing
 
 [![Coverage Status](https://coveralls.io/repos/github/pantheon-systems/pyml-validator/badge.svg?t=PGhafd)](https://coveralls.io/github/pantheon-systems/pyml-validator)
