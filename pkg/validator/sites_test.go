@@ -218,32 +218,24 @@ func TestValidateFromYaml(t *testing.T) {
 	}
 }
 
-func TestValidateFromFilePath(t *testing.T) {
+func TestValidateSitesFromFilePath(t *testing.T) {
 	for _, tc := range []struct {
-		validator   string
 		fixtureName string
 		expected    error
 	}{
+		{"invalid_api_version_only", ErrInvalidAPIVersion},
+		{"valid_api_version_only", nil},
+		{"valid", nil},
 		{
-			"sites", "invalid_api_version_only", ErrInvalidAPIVersion,
-		},
-		{
-			"sites", "valid_api_version_only", nil,
-		},
-		{
-			"sites", "valid", nil,
-		},
-		{
-			"sites", "this_file_does_not_exist", errors.New(
+			"this_file_does_not_exist", errors.New(
 				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
 		},
 	} {
-		fxTestPathName := fmt.Sprintf(`%s/%s`, tc.validator, tc.fixtureName)
-		t.Run(fxTestPathName, func(t *testing.T) {
-			v, err := ValidatorFactory(tc.validator)
+		t.Run(tc.fixtureName, func(t *testing.T) {
+			v, err := ValidatorFactory("sites")
 			require.NoError(t, err)
-			filePath := fmt.Sprintf("../../fixtures/%s.yml", fxTestPathName)
+			filePath := fmt.Sprintf("../../fixtures/sites/%s.yml", tc.fixtureName)
 
 			err = v.ValidateFromFilePath(filePath)
 			if tc.expected == nil {
