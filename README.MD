@@ -1,4 +1,4 @@
-# Pantheon.yml | Sites.yml Validator
+# Sites.yml | Pantheon.yml Validator
 
 A utility for validating a sites.yml file on a pantheon site during WordPress multisites' search-replace tasks. Asprirationally to include pantheon.yml validation in the future.
 
