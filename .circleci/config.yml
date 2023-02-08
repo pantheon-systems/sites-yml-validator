@@ -4,10 +4,10 @@ version: 2.1
 executors:
   go-build:
     docker:
-      - image: quay.io/getpantheon/go-build
+      - image: us-docker.pkg.dev/pantheon-artifacts/internal/go-build:latest
         auth:
-          username: $QUAY_USER
-          password: $QUAY_PASSWD
+          username: _json_key
+          password: $CIRCLE_CI_COMMON_KEY
 
 commands:
   save-go-mod-cache:
@@ -72,23 +72,23 @@ workflows:
     jobs:
       - update-mod-cache:
           context:
-            - docker-executor-auth
+            - gcp-credentials-ar-ci
             - sig-go-project
       - build:
           context:
-            - docker-executor-auth
+            - gcp-credentials-ar-ci
             - sig-go-project
           requires:
             - update-mod-cache
       - test:
           context:
-            - docker-executor-auth
+            - gcp-credentials-ar-ci
             - sig-go-project
           requires:
             - update-mod-cache
       - release:
           context:
-            - docker-executor-auth
+            - gcp-credentials-ar-ci
             - sig-go-release
           requires:
             - test
