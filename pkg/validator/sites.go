@@ -58,8 +58,9 @@ func validateDomainMaps(domainMaps map[string]model.DomainMapByEnvironment) erro
 		if !ValidMultidevNameRegex.MatchString(env) {
 			return fmt.Errorf("%q is not a valid environment name", env)
 		}
-		if len(domainMap) > MaxDomainMaps {
-			return fmt.Errorf("%q has too many domains listed. Maximum is %d", env, MaxDomainMaps)
+		domainMapCount := len(domainMap)
+		if domainMapCount > MaxDomainMaps {
+			return fmt.Errorf("%q has too many domains listed (%d). Maximum is %d", env, domainMapCount, MaxDomainMaps)
 		}
 		for _, domain := range domainMap {
 			if !ValidHostnameRegex.MatchString(domain) {

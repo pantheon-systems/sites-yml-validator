@@ -135,7 +135,7 @@ func TestValidate(t *testing.T) {
 					},
 				},
 			},
-			errors.New(`"dev" has too many domains listed. Maximum is 25`),
+			errors.New(`"dev" has too many domains listed (29). Maximum is 25`),
 		},
 		{
 			"invalid hostname",
