@@ -11,21 +11,37 @@ domain_maps:
     # each environment collection maps the blog ID to its URL. A url must be
     # set in both the target and source environments for search-replace to be
     # run.
-    # i.e. 1: blog1-mysite.com
-    1: about.dev-mysite.pantheonsite.io  
-    2: employee-resources.dev-mysite.pantheonsite.io  
-    3: staff-portal.dev-mysite.pantheonsite.io  
+    # i.e. 2: blog1-mysite.com
+    1: dev-srtest.pantheonsite.io
+    2: about.dev-srtest.pantheonsite.io
+    3: employee-resources.dev-srtest.pantheonsite.io
+    4: staff-portal.dev-srtest.pantheonsite.io
+    5: customers.dev-srtest.pantheonsite.io
+    6: hr-department.dev-srtest.pantheonsite.io
   test:
-    1: about.test-mysite.pantheonsite.io
-    2: employee-resources.test-mysite.pantheonsite.io
-    3: staff-portal.test-mysite.pantheonsite.io
+    1: test-srtest.pantheonsite.io
+    2: about.test-srtest.pantheonsite.io
+    3: employee-resources.test-srtest.pantheonsite.io
   live:
-    1: about.mysite.com
-    2: employee-resources.mysite.com
-    3: staff-portal.mysite.com
+    1: searchreplacetest.com
+    2: about.searchreplacetest.com
+    3: employee-resources.searchreplacetest.com
+    4: staff-portal.searchreplacetest.com
+    5: customers.searchreplacetest.com
+    6: hr-department.searchreplacetest.com
   autopilot:
-    1: about.autopilot-mysite.pantheonsite.io
-    2: employee-resources.autopilot-mysite.pantheonsite.io
-    3: staff-portal.autopilot-mysite.pantheonsite.io
-
+    1: autopilot-srtest.pantheonsite.io
+    2: about.autopilot-srtest.pantheonsite.io
+    5: customers.autopilot-srtest.pantheonsite.io
+    6: hr-department.autopilot-srtest.pantheonsite.io
+  nomatch:
+    31: jobs.nomatch-srtest.pantheonsite.io
+    32: legal.nomatch-srtest.pantheonsite.io
+  domains:
+    1: searchreplace.com
+    2: about-searchreplace.com
+    3: employee-resources-searchreplace.com
+    4: staff-portal-searchreplace.com
+    5: customers-searchreplace.com
+    6: hr-department-searchreplace.com
 # Anything else in the file will be ignored, but not rejected.
