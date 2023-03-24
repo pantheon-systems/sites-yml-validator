@@ -4,7 +4,7 @@ version: 2.1
 executors:
   go-build:
     docker:
-      - image: us-docker.pkg.dev/pantheon-artifacts/internal/go-build:latest
+      - image: us-docker.pkg.dev/pantheon-artifacts/internal/go-build:1.20
         auth:
           username: _json_key
           password: $CIRCLE_CI_COMMON_KEY
