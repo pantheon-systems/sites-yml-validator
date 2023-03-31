@@ -79,6 +79,12 @@ update-makefiles:: ## update the make subtree, assumes the subtree is in devops/
 		@echo "git commit -am \"Move common_makefiles to new prefix\""
 		@exit 1
   endif
+	# best effort attempt to do one time setup
+	@set -x; if ! git remote show common_makefiles &> /dev/null; then \
+		echo "adding common_makefiles as a remote"; \
+		git remote add common_makefiles git@github.com:pantheon-systems/common_makefiles.git --no-tags; \
+		git subtree add --prefix devops/make common_makefiles master --squash &>/dev/null || true; \
+	fi
 	@git subtree pull --prefix devops/make common_makefiles master --squash
 
 .PHONY:: all help update-makefiles
