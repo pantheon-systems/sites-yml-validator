@@ -46,7 +46,7 @@ ifndef GITHUB_TOKEN
 	$(call ERROR, "This task needs a GITHUB_TOKEN environment variable")
 endif
 	$(call INFO, "Installing pants version satisfying: $(PANTS_VERSION_CONSTRAINT)")
-	@PANTS_VERSION_CONSTRAINT=$(PANTS_VERSION_CONSTRAINT) ./devops/make/sh/install-pants.sh
+	@PANTS_VERSION_CONSTRAINT=$(PANTS_VERSION_CONSTRAINT) $(COMMON_MAKE_DIR)/sh/install-pants.sh
 	$(call INFO, "Installed pants version" $(shell pants version))
 
 delete-circle-pants:: delete-pants-sandbox ## TODO: remove the alias once $REASONS don't apply

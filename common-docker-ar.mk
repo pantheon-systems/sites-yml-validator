@@ -28,7 +28,7 @@ endif
 
 build-docker:: build-docker-ar ## build the docker container
 
-build-docker-ar:: build-linux
+build-docker-ar:: setup-ar build-linux
 	@FORCE_BUILD=$(DOCKER_FORCE_BUILD) TRY_PULL=$(DOCKER_TRY_PULL) \
 		$(COMMON_MAKE_DIR)/sh/build-docker.sh \
 		$(AR_IMAGE) $(DOCKER_BUILD_CONTEXT) $(DOCKER_BUILD_ARGS)

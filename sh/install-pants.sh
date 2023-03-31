@@ -1,6 +1,7 @@
 #! /bin/bash
 set -eou pipefail
 
+DEPLOY_TOOLBOX_IMAGE="us-docker.pkg.dev/pantheon-artifacts/internal/deploy-toolbox:latest"
 PANTS_VERSION_CONSTRAINT=${PANTS_VERSION_CONSTRAINT:-"latest"}
 GITHUB_TOKEN=${GITHUB_TOKEN:-}
 
@@ -11,10 +12,10 @@ fi
 
 if ! command -v pants >/dev/null; then
   # pants is not installed so install it
-  echo "Pants is not installed in this env, please consider switching to quay.io/getpantheon/deploy-toolbox:latest. Installing pants..."
+  echo "Pants is not installed in this env, please consider switching to $DEPLOY_TOOLBOX_IMAGE. Installing pants..."
 
   if ! command -v jq >/dev/null; then
-    echo "JQ is required to install pants. please consider switching to quay.io/getpantheon/deploy-toolbox:latest or install JQ in your image to utilize this script."
+    echo "JQ is required to install pants. please consider switching to $DEPLOY_TOOLBOX_IMAGE or install JQ in your image to utilize this script."
     exit 1
   fi
 

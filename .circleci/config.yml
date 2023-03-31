@@ -40,6 +40,7 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
       - run: make test-deps-build
       - run: make test-common-build
 
@@ -47,6 +48,7 @@ jobs:
     executor: deploy-toolbox
     steps:
       - checkout
+      - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
       - run: make test-deps-deploy
       - run: make test-common-deploy
 
@@ -55,6 +57,7 @@ jobs:
       - image: cimg/go:1.17
     steps:
       - checkout
+      - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
       - run: make test-vault-gsa-setup
 
   autotag-release:

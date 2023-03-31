@@ -614,7 +614,7 @@ Installs pants version greater than `0.1.3` unless overridden with
 circle for integration testing and acceptance criteria review.
 
 - `GITHUB_TOKEN`: (required) Github Token for downloading releases of the [pants](https://github.com/pantheon-systems/pants)
-   utility. From the production Vault `secret/securenotes/github__pantheon-circleci_user` grab the `pants-token` from this secure note and set it as the `GITHUB_TOKEN`.
+   utility. From the production Vault `secret/github/pantheon-circleci` grab the `pants-token` from this secure note and set it as the `GITHUB_TOKEN`.
 - `PANTS_VERSION`: (optional) The version of pants to install. Default `latest`. Specify version like `x.y.z`, eg: `0.1.47`
 - `PANTS_INCLUDE`: (optional) The services for pants to install or update. E.g `make
   init-pants PANTS_INCLUDE=notification-service,ticket-management`
