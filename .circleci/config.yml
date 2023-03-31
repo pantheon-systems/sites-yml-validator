@@ -22,10 +22,6 @@ commands:
       - restore_cache:
           keys:
             - v4-dependencies-{{ checksum "go.sum" }}
-
-  # By default, CircleCI uses ssh, and authenticates as a user with read access to projects, but not write access.
-  # In order for `git push` command to work, we need to have CircleCI use HTTPS with the provided oauth token
-  # instead of ssh (the token is for pantheon-releases which has write access, but the default circle user does not)
   configure-https-git:
     steps:
       - run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/pantheon-systems/".insteadOf "git@github.com:pantheon-systems/"
