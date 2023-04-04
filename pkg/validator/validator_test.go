@@ -14,7 +14,6 @@ func TestValidatorFactory(t *testing.T) {
 		expectedErr error
 	}{
 		{"sites", &SitesValidator{}, nil},
-		{"pantheon", &PantheonValidator{}, nil},
 		{"foo", nil, errors.New(`"foo" is not a valid validator.`)},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

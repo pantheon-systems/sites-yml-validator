@@ -41,8 +41,11 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-      - Merge pull request
+      - fixup
       - Merge branch
+      - Merge commit
+      - Merge pull request
+      - Squashed 'devops/make/'
 
 # make a zip of the source
 # https://goreleaser.com/customization/source/

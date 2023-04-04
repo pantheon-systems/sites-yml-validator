@@ -10,13 +10,15 @@ import (
 )
 
 const (
-	MaxDomainMaps = 25 // This could be raised
+	maxDomainMaps          = 25 // This could be raised
+	validHostnameRegex     = `^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	validMultidevNameRegex = `^[a-z0-9\-]{1,11}$`
 )
 
 var (
-	// See https://github.com/pantheon-systems/titan-mt/blob/master/yggdrasil/lib/pantheon_yml/pantheon_yml_v1_schema.py
-	ValidHostnameRegex     = regexp.MustCompile(`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`)
-	ValidMultidevNameRegex = regexp.MustCompile(`^[a-z0-9\-]{1,11}$`)
+	// c/f pantheon.yml validation in titan-mt.
+	validHostname     = regexp.MustCompile(validHostnameRegex)
+	validMultidevName = regexp.MustCompile(validMultidevNameRegex)
 )
 
 type SitesValidator struct{}
@@ -55,15 +57,15 @@ func (v *SitesValidator) validate(sites model.SitesYml) error {
 // provided are valid Pantheon hostnames.
 func validateDomainMaps(domainMaps map[string]model.DomainMapByEnvironment) error {
 	for env, domainMap := range domainMaps {
-		if !ValidMultidevNameRegex.MatchString(env) {
+		if !validMultidevName.MatchString(env) {
 			return fmt.Errorf("%q is not a valid environment name", env)
 		}
 		domainMapCount := len(domainMap)
-		if domainMapCount > MaxDomainMaps {
-			return fmt.Errorf("%q has too many domains listed (%d). Maximum is %d", env, domainMapCount, MaxDomainMaps)
+		if domainMapCount > maxDomainMaps {
+			return fmt.Errorf("%q has too many domains listed (%d). Maximum is %d", env, domainMapCount, maxDomainMaps)
 		}
 		for _, domain := range domainMap {
-			if !ValidHostnameRegex.MatchString(domain) {
+			if !validHostname.MatchString(domain) {
 				return fmt.Errorf("%q is not a valid hostname", domain)
 			}
 		}

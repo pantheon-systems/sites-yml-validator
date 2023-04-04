@@ -130,8 +130,8 @@ func TestValidate(t *testing.T) {
 						28: "blog28.dev-mysite.pantheonsite.io",
 						29: "blog29.dev-mysite.pantheonsite.io",
 					},
-					"feat_branch": model.DomainMapByEnvironment{
-						1: "blog1.feat-branch-mysite.pantheonsite.io",
+					"mdev": model.DomainMapByEnvironment{
+						1: "blog1.mdev-mysite.pantheonsite.io",
 					},
 				},
 			},
@@ -227,7 +227,8 @@ func TestValidateSitesFromFilePath(t *testing.T) {
 		{"valid_api_version_only", nil},
 		{"valid", nil},
 		{
-			"this_file_does_not_exist", errors.New(
+			"this_file_does_not_exist",
+			errors.New(
 				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
 		},

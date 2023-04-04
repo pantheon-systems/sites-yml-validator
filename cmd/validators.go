@@ -34,16 +34,6 @@ var sitesCommand = &cobra.Command{
 	},
 }
 
-var pantheonCommand = &cobra.Command{
-	Use:   "pantheon",
-	Short: "validate pantheon.yml",
-	Long:  `Validate pantheon.yml. For more information, see https://pantheon.io/docs/pantheon-yml`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return validatorCommand(cmd)
-	},
-}
-
 func init() {
-	rootCmd.AddCommand(pantheonCommand)
 	rootCmd.AddCommand(sitesCommand)
 }
