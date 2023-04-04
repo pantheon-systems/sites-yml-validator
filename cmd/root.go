@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -17,6 +17,6 @@ Ensures that the given config file can be used by the platform.`,
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
+		os.Exit(1)
 	}
 }
