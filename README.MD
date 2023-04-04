@@ -6,7 +6,7 @@ A utility for validating a sites.yml file on a Pantheon site during WordPress mu
 
 ### Sites.yml
 ```
-$ pyml-validator sites -f path/to/sites.yml
+$ pyml-validator sites path/to/sites.yml
 ```
 
 See [this annotated fixture](./fixtures/sites/valid.yml) for an example of a valid sites.yml file.

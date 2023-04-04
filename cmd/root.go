@@ -20,11 +20,3 @@ func Execute() {
 		log.Fatal(err)
 	}
 }
-
-func init() {
-	rootCmd.PersistentFlags().StringVarP(&FilePath, "file", "f", "", "path/to/file.yml")
-	err := rootCmd.MarkPersistentFlagRequired("file")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
