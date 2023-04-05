@@ -3,7 +3,7 @@ package validator
 import (
 	"errors"
 	"fmt"
-	"pyml-validator/pkg/model"
+	"sites-yml-validator/pkg/model"
 	"strings"
 	"testing"
 

@@ -1,6 +1,6 @@
 package main
 
-import "pyml-validator/cmd"
+import "sites-yml-validator/cmd"
 
 func main() {
 	cmd.Execute()

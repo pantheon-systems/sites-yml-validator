@@ -3,8 +3,8 @@ package validator
 import (
 	"fmt"
 	"os"
-	"pyml-validator/pkg/model"
 	"regexp"
+	"sites-yml-validator/pkg/model"
 
 	"gopkg.in/yaml.v3"
 )

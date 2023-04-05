@@ -6,7 +6,8 @@ type SitesYml struct {
 	DomainMaps DomainMaps `yaml:"domain_maps"`
 }
 
+// DomainMaps is a collection of blog ID/blog domains keyed by environment name.
 type DomainMaps map[string]DomainMapByEnvironment
 
-// DomainMapByEnvironment is a map of site (blog) domains keyed by blog ID.
+// DomainMapByEnvironment is a collection of site (blog) domains keyed by blog ID.
 type DomainMapByEnvironment map[int]string
