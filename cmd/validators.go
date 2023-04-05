@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"pyml-validator/pkg/validator"
+	"sites-yml-validator/pkg/validator"
 
 	"github.com/spf13/cobra"
 )

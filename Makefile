@@ -1,4 +1,4 @@
-APP := pyml-validator
+APP := sites-yml-validator
 
 include devops/make/common.mk
 include devops/make/common-go.mk

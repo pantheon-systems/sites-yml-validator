@@ -1,5 +1,5 @@
 ---
-project_name: pyml-validator
+project_name: sites-yml-validator
 
 before:
   hooks:

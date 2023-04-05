@@ -29,19 +29,9 @@ domain_maps:
     4: staff-portal.searchreplacetest.com
     5: customers.searchreplacetest.com
     6: hr-department.searchreplacetest.com
-  autopilot:
-    1: autopilot-srtest.pantheonsite.io
-    2: about.autopilot-srtest.pantheonsite.io
-    5: customers.autopilot-srtest.pantheonsite.io
-    6: hr-department.autopilot-srtest.pantheonsite.io
-  nomatch:
-    31: jobs.nomatch-srtest.pantheonsite.io
-    32: legal.nomatch-srtest.pantheonsite.io
-  domains:
-    1: searchreplace.com
-    2: about-searchreplace.com
-    3: employee-resources-searchreplace.com
-    4: staff-portal-searchreplace.com
-    5: customers-searchreplace.com
-    6: hr-department-searchreplace.com
+  mdevname:
+    1: mdevname-srtest.pantheonsite.io
+    2: about.mdevname-srtest.pantheonsite.io
+    5: customers.mdevname-srtest.pantheonsite.io
+    6: hr-department.mdevname-srtest.pantheonsite.io
 # Anything else in the file will be ignored, but not rejected.

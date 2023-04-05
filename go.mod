@@ -1,4 +1,4 @@
-module pyml-validator
+module sites-yml-validator
 
 go 1.20
 
