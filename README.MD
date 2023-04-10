@@ -1,4 +1,4 @@
-# Pantheon YML Validator
+# Pantheon Sites.yml Validator
 
 [![Early Access](https://img.shields.io/badge/Pantheon-Early_Access-yellow?logo=pantheon&color=FFDC28)](https://docs.pantheon.io/oss-support-levels#early-access)
 
