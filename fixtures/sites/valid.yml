@@ -1,17 +1,17 @@
 ---
 api_version: 1 # Currently only one api version.
 
-# "domain_maps" is a collection of blog URLs for each environment used to
+# "domain_maps" is a collection of site URLs for each environment used to
 # facilitate search-replace of a WordPress Multisite (WPMS) across pantheon
 # environments. Each key of "domain_maps" must be a valid environment name.
 domain_maps:
   # environment: <collection of domains to be used on this environment>
   # i.e. dev, test, live, feat-branch, &c.
   dev:
-    # each environment collection maps the blog ID to its URL. A url must be
+    # each environment collection maps the site ID to its URL. A url must be
     # set in both the target and source environments for search-replace to be
     # run.
-    # i.e. 2: blog1-mysite.com
+    # i.e. 2: site1-mysite.com
     1: dev-srtest.pantheonsite.io
     2: about.dev-srtest.pantheonsite.io
     3: employee-resources.dev-srtest.pantheonsite.io

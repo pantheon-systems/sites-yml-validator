@@ -20,15 +20,15 @@ The basic format for the file is:
 api_version: 1
 domain_maps:
   {env_name}:
-    {blog_id}: {site_url}
+    {site_id}: {site_url}
 ```
 A `sites.yml` file is valid if:
 - the `api_version` is `1`
 - the key for each item in `domain_maps` is a valid Pantheon environment name (`dev`, `test`, `multidev`, etc.)
-- For each subsite listed for an environment:
+- For each site listed for an environment:
    - the key is an integer
    - the value is a valid Pantheon hostname
-- there are no more than 25 subsites listed for any environment
+- there are no more than 25 sites listed for any environment
 
 ## Install
 
