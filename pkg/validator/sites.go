@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"sites-yml-validator/pkg/model"
+	"strconv"
 
 	"gopkg.in/yaml.v3"
 )
@@ -64,7 +65,10 @@ func validateDomainMaps(domainMaps map[string]model.DomainMapByEnvironment) erro
 		if domainMapCount > maxDomainMaps {
 			return fmt.Errorf("%q has too many domains listed (%d). Maximum is %d", env, domainMapCount, maxDomainMaps)
 		}
-		for _, domain := range domainMap {
+		for siteID, domain := range domainMap {
+			if !isValidSiteID(siteID) {
+				return fmt.Errorf("%q is not a valid site ID", siteID)
+			}
 			if !validHostname.MatchString(domain) {
 				return fmt.Errorf("%q is not a valid hostname", domain)
 			}
@@ -80,4 +84,9 @@ func validateAPIVersion(apiVersion int) error {
 		return ErrInvalidAPIVersion
 	}
 	return nil
+}
+
+func isValidSiteID(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
 }

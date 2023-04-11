@@ -10,4 +10,9 @@ type SitesYml struct {
 type DomainMaps map[string]DomainMapByEnvironment
 
 // DomainMapByEnvironment is a collection of site domains keyed by site ID.
-type DomainMapByEnvironment map[int]string
+//
+// Given an int is valid in yaml but not json, and it is difficult to validate
+// if a key is an int or string in PHP (c/f terminus-yml-validator-plugin), it
+// is easiest to unmarshal into a string, and check that the key is also a
+// valid integer as part of the validator.
+type DomainMapByEnvironment map[string]string
