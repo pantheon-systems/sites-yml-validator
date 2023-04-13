@@ -87,6 +87,9 @@ func validateAPIVersion(apiVersion int) error {
 }
 
 func isValidSiteID(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return false
+	}
+	return i > 0
 }

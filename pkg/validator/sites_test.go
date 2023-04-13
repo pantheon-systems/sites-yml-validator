@@ -275,8 +275,17 @@ func TestIsValidSiteID(t *testing.T) {
 		{"1", true},
 		{"300", true},
 		{"foo", false},
+		{"i", false},
 		{"1a", false},
 		{"", false},
+		{"1.2", false},
+		{".2", false},
+		{"0.2", false},
+		{"1.0", false},
+		{"0", false},
+		{"00", false},
+		{"01", true},
+		{"-5", false},
 	} {
 		t.Run(tc.input, func(t *testing.T) {
 			assert.Equal(t, tc.expected, isValidSiteID(tc.input))
