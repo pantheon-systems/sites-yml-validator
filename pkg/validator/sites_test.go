@@ -284,7 +284,7 @@ func TestIsValidSiteID(t *testing.T) {
 		{"1.0", false},
 		{"0", false},
 		{"00", false},
-		{"01", true},
+		{"01", false},
 		{"-5", false},
 	} {
 		t.Run(tc.input, func(t *testing.T) {
