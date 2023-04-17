@@ -14,5 +14,5 @@ type DomainMaps map[string]DomainMapByEnvironment
 // Given an int is valid in yaml but not json, and it is difficult to validate
 // if a key is an int or string in PHP (c/f terminus-yml-validator-plugin), it
 // is easiest to unmarshal into a string, and check that the key is also a
-// valid integer as part of the validator.
+// valid site ID as part of the validator.
 type DomainMapByEnvironment map[string]string
