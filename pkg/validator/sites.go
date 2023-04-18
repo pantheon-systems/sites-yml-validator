@@ -87,15 +87,20 @@ func validateAPIVersion(apiVersion int) error {
 }
 
 func isValidSiteID(s string) bool {
+	// I don't know that "" will be possible unmarshalling real yaml, but covering our bases
 	if s == "" {
 		return false
 	}
+	// Either value of 0 (not a valid site id), or leading zeros (which would strconv to drop the 0)
+	// is problematic for consistent handling in the job runner script.
 	if s[0:1] == "0" {
 		return false
 	}
+	// Is the string an int?
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		return false
 	}
+	// Is the number positive?
 	return i > 0
 }
