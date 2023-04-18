@@ -1,0 +1,7 @@
+---
+api_version: 1
+domain_maps:
+  dev:
+    1: dev-srtest.pantheonsite.io
+    "2": about.dev-srtest.pantheonsite.io
+    "3": employee-resources.dev-srtest.pantheonsite.io

@@ -49,16 +49,16 @@ func TestValidate(t *testing.T) {
 				APIVersion: 1,
 				DomainMaps: model.DomainMaps{
 					"dev": model.DomainMapByEnvironment{
-						1: "site1.dev-mysite.pantheonsite.io",
+						"1": "site1.dev-mysite.pantheonsite.io",
 					},
 					"test": model.DomainMapByEnvironment{
-						1: "site1.dev-mysite.pantheonsite.io",
+						"1": "site1.dev-mysite.pantheonsite.io",
 					},
 					"live": model.DomainMapByEnvironment{
-						1: "site1.mysite.com",
+						"1": "site1.mysite.com",
 					},
 					"autopilot": model.DomainMapByEnvironment{
-						1: "site1.autopilot-mysite.pantheonsite.io",
+						"1": "site1.autopilot-mysite.pantheonsite.io",
 					},
 				},
 			},
@@ -70,10 +70,10 @@ func TestValidate(t *testing.T) {
 				APIVersion: 1,
 				DomainMaps: model.DomainMaps{
 					"dev": model.DomainMapByEnvironment{
-						1: "site1.dev-mysite.pantheonsite.io",
+						"1": "site1.dev-mysite.pantheonsite.io",
 					},
 					"mylongmultidevname": model.DomainMapByEnvironment{
-						1: "site1.mylongmultidevname-mysite.pantheonsite.io",
+						"1": "site1.mylongmultidevname-mysite.pantheonsite.io",
 					},
 				},
 			},
@@ -85,10 +85,10 @@ func TestValidate(t *testing.T) {
 				APIVersion: 1,
 				DomainMaps: model.DomainMaps{
 					"dev": model.DomainMapByEnvironment{
-						1: "site1.dev-mysite.pantheonsite.io",
+						"1": "site1.dev-mysite.pantheonsite.io",
 					},
 					"feat_branch": model.DomainMapByEnvironment{
-						1: "site1.feat-branch-mysite.pantheonsite.io",
+						"1": "site1.feat-branch-mysite.pantheonsite.io",
 					},
 				},
 			},
@@ -100,38 +100,38 @@ func TestValidate(t *testing.T) {
 				APIVersion: 1,
 				DomainMaps: model.DomainMaps{
 					"dev": model.DomainMapByEnvironment{
-						1:  "site1.dev-mysite.pantheonsite.io",
-						2:  "site2.dev-mysite.pantheonsite.io",
-						3:  "site3.dev-mysite.pantheonsite.io",
-						4:  "site4.dev-mysite.pantheonsite.io",
-						5:  "site5.dev-mysite.pantheonsite.io",
-						6:  "site6.dev-mysite.pantheonsite.io",
-						7:  "site7.dev-mysite.pantheonsite.io",
-						8:  "site8.dev-mysite.pantheonsite.io",
-						9:  "site9.dev-mysite.pantheonsite.io",
-						10: "site10.dev-mysite.pantheonsite.io",
-						11: "site11.dev-mysite.pantheonsite.io",
-						12: "site12.dev-mysite.pantheonsite.io",
-						13: "site13.dev-mysite.pantheonsite.io",
-						14: "site14.dev-mysite.pantheonsite.io",
-						15: "site15.dev-mysite.pantheonsite.io",
-						16: "site16.dev-mysite.pantheonsite.io",
-						17: "site17.dev-mysite.pantheonsite.io",
-						18: "site18.dev-mysite.pantheonsite.io",
-						19: "site19.dev-mysite.pantheonsite.io",
-						20: "site20.dev-mysite.pantheonsite.io",
-						21: "site21.dev-mysite.pantheonsite.io",
-						22: "site22.dev-mysite.pantheonsite.io",
-						23: "site23.dev-mysite.pantheonsite.io",
-						24: "site24.dev-mysite.pantheonsite.io",
-						25: "site25.dev-mysite.pantheonsite.io",
-						26: "site26.dev-mysite.pantheonsite.io",
-						27: "site27.dev-mysite.pantheonsite.io",
-						28: "site28.dev-mysite.pantheonsite.io",
-						29: "site29.dev-mysite.pantheonsite.io",
+						"1":  "site1.dev-mysite.pantheonsite.io",
+						"2":  "site2.dev-mysite.pantheonsite.io",
+						"3":  "site3.dev-mysite.pantheonsite.io",
+						"4":  "site4.dev-mysite.pantheonsite.io",
+						"5":  "site5.dev-mysite.pantheonsite.io",
+						"6":  "site6.dev-mysite.pantheonsite.io",
+						"7":  "site7.dev-mysite.pantheonsite.io",
+						"8":  "site8.dev-mysite.pantheonsite.io",
+						"9":  "site9.dev-mysite.pantheonsite.io",
+						"10": "site10.dev-mysite.pantheonsite.io",
+						"11": "site11.dev-mysite.pantheonsite.io",
+						"12": "site12.dev-mysite.pantheonsite.io",
+						"13": "site13.dev-mysite.pantheonsite.io",
+						"14": "site14.dev-mysite.pantheonsite.io",
+						"15": "site15.dev-mysite.pantheonsite.io",
+						"16": "site16.dev-mysite.pantheonsite.io",
+						"17": "site17.dev-mysite.pantheonsite.io",
+						"18": "site18.dev-mysite.pantheonsite.io",
+						"19": "site19.dev-mysite.pantheonsite.io",
+						"20": "site20.dev-mysite.pantheonsite.io",
+						"21": "site21.dev-mysite.pantheonsite.io",
+						"22": "site22.dev-mysite.pantheonsite.io",
+						"23": "site23.dev-mysite.pantheonsite.io",
+						"24": "site24.dev-mysite.pantheonsite.io",
+						"25": "site25.dev-mysite.pantheonsite.io",
+						"26": "site26.dev-mysite.pantheonsite.io",
+						"27": "site27.dev-mysite.pantheonsite.io",
+						"28": "site28.dev-mysite.pantheonsite.io",
+						"29": "site29.dev-mysite.pantheonsite.io",
 					},
 					"mdev": model.DomainMapByEnvironment{
-						1: "site1.mdev-mysite.pantheonsite.io",
+						"1": "site1.mdev-mysite.pantheonsite.io",
 					},
 				},
 			},
@@ -143,17 +143,32 @@ func TestValidate(t *testing.T) {
 				APIVersion: 1,
 				DomainMaps: model.DomainMaps{
 					"dev": model.DomainMapByEnvironment{
-						1: "site1.dev-mysite.pantheonsite.io",
+						"1": "site1.dev-mysite.pantheonsite.io",
 					},
 					"test": model.DomainMapByEnvironment{
-						1: "$(sudo do something dangerous)",
+						"1": "$(sudo do something dangerous)",
 					},
 					"live": model.DomainMapByEnvironment{
-						1: "site1.mysite.com",
+						"1": "site1.mysite.com",
 					},
 				},
 			},
 			errors.New(`"$(sudo do something dangerous)" is not a valid hostname`),
+		},
+		{
+			"invalid site id",
+			model.SitesYml{
+				APIVersion: 1,
+				DomainMaps: model.DomainMaps{
+					"dev": model.DomainMapByEnvironment{
+						"foo": "site1.dev-mysite.pantheonsite.io",
+					},
+					"test": model.DomainMapByEnvironment{
+						"foo": "site1.test-mysite.pantheonsite.io",
+					},
+				},
+			},
+			errors.New(`"foo" is not a valid site ID`),
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -232,6 +247,8 @@ func TestValidateSitesFromFilePath(t *testing.T) {
 				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
 		},
+		{"valid_string_as_key", nil},
+		{"valid_both_string_and_int_key", nil},
 	} {
 		t.Run(tc.fixtureName, func(t *testing.T) {
 			v, err := ValidatorFactory("sites")
@@ -246,6 +263,32 @@ func TestValidateSitesFromFilePath(t *testing.T) {
 
 			// TODO: assert.ErrorIs would be a better test.
 			assert.EqualError(t, err, tc.expected.Error())
+		})
+	}
+}
+
+func TestIsValidSiteID(t *testing.T) {
+	for _, tc := range []struct {
+		input    string
+		expected bool
+	}{
+		{"1", true},
+		{"300", true},
+		{"foo", false},
+		{"i", false},
+		{"1a", false},
+		{"", false},
+		{"1.2", false},
+		{".2", false},
+		{"0.2", false},
+		{"1.0", false},
+		{"0", false},
+		{"00", false},
+		{"01", false},
+		{"-5", false},
+	} {
+		t.Run(tc.input, func(t *testing.T) {
+			assert.Equal(t, tc.expected, isValidSiteID(tc.input))
 		})
 	}
 }

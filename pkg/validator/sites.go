@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"sites-yml-validator/pkg/model"
+	"strconv"
 
 	"gopkg.in/yaml.v3"
 )
@@ -64,7 +65,10 @@ func validateDomainMaps(domainMaps map[string]model.DomainMapByEnvironment) erro
 		if domainMapCount > maxDomainMaps {
 			return fmt.Errorf("%q has too many domains listed (%d). Maximum is %d", env, domainMapCount, maxDomainMaps)
 		}
-		for _, domain := range domainMap {
+		for siteID, domain := range domainMap {
+			if !isValidSiteID(siteID) {
+				return fmt.Errorf("%q is not a valid site ID", siteID)
+			}
 			if !validHostname.MatchString(domain) {
 				return fmt.Errorf("%q is not a valid hostname", domain)
 			}
@@ -80,4 +84,23 @@ func validateAPIVersion(apiVersion int) error {
 		return ErrInvalidAPIVersion
 	}
 	return nil
+}
+
+func isValidSiteID(s string) bool {
+	// I don't know that "" will be possible unmarshalling real yaml, but covering our bases
+	if s == "" {
+		return false
+	}
+	// Either value of 0 (not a valid site id), or leading zeros (which would strconv to drop the 0)
+	// is problematic for consistent handling in the job runner script.
+	if s[0:1] == "0" {
+		return false
+	}
+	// Is the string an int?
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return false
+	}
+	// Is the number positive?
+	return i > 0
 }
