@@ -61,13 +61,13 @@ wget https://github.com/pantheon-systems/sites-yml-validator/releases/latest/dow
 ### Latest version Intel processor Mac
 
 ```bash
-wget https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_x86_64.tar.gz && tar -xf sites-yml-validator_Darwin_x86_64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
+curl -LO https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_x86_64.tar.gz && tar -xf sites-yml-validator_Darwin_x86_64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
 ```
 
 ### Latest version Apple Silicon processor Mac
 
 ```bash
-wget https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_arm64.tar.gz && tar -xf sites-yml-validator_Darwin_arm64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
+curl -LO https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_arm64.tar.gz && tar -xf sites-yml-validator_Darwin_arm64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
 ```
 
 ## Testing
