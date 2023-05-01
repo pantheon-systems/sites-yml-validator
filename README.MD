@@ -36,7 +36,7 @@ A `sites.yml` file is valid if:
 
 Use wget to download, gzipped pre-compiled binaries:
 For instance, VERSION=v0.0.11 and BINARY=sites-yml-validator_linux_amd64
-Refer to the [Releases](https://github.com/pantheon-systems/sites-yml-validator/releases) page for `VERSION` and `BINARY` parameteres
+Refer to the [Releases](https://github.com/pantheon-systems/sites-yml-validator/releases) page for `VERSION` and `BINARY` parameters
 
 ### Compressed via tar.gz
 ```bash
