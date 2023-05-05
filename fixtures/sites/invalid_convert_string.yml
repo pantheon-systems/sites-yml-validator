@@ -1,0 +1,3 @@
+---
+api_version: 1 # Currently only one api version.
+convert_to_subdirectory: "hello"

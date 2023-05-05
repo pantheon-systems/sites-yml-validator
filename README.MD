@@ -24,6 +24,7 @@ domain_maps:
 ```
 A `sites.yml` file is valid if:
 - the `api_version` is `1`
+- `convert_to_subdirectory` is a boolean `true` or `false`, or the integers `1` or `0`.
 - the key for each item in `domain_maps` is a valid Pantheon environment name (`dev`, `test`, `multidev`, etc.)
 - For each site listed for an environment:
    - the key is an integer

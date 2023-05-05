@@ -190,7 +190,7 @@ func TestValidateFromYaml(t *testing.T) {
 			expected: ErrInvalidAPIVersion,
 		},
 		{
-			name: "invalid api_version ",
+			name: "invalid yaml",
 			yaml: `this is not good yaml`,
 			expected: &yaml.TypeError{
 				Errors: []string{
@@ -232,6 +232,9 @@ func TestValidateSitesFromFilePath(t *testing.T) {
 				"error reading YAML file: open ../../fixtures/sites/this_file_does_not_exist.yml: no such file or directory",
 			),
 		},
+		{"valid_convert", nil},
+		{"valid_convert_int", nil},
+		{"invalid_convert_string", errors.New("unexpected type string for convert_to_subdirectory")},
 	} {
 		t.Run(tc.fixtureName, func(t *testing.T) {
 			v, err := ValidatorFactory("sites")
