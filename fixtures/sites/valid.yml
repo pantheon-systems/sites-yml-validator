@@ -1,6 +1,9 @@
 ---
 api_version: 1 # Currently only one api version.
-
+# convert_to_subdirectory is set if a live site uses subdomains, but all
+# other environments use subdirectory WPMS. Conversion only runs when run
+# FROM the live environment.
+convert_to_subdirectory: false
 # "domain_maps" is a collection of site URLs for each environment used to
 # facilitate search-replace of a WordPress Multisite (WPMS) across pantheon
 # environments. Each key of "domain_maps" must be a valid environment name.
