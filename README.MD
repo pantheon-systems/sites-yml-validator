@@ -37,6 +37,7 @@ A `sites.yml` file is valid if:
 
 Use wget to download, gzipped pre-compiled binaries:
 For instance, VERSION=v0.0.11 and BINARY=sites-yml-validator_linux_amd64
+Refer to the [Releases](https://github.com/pantheon-systems/sites-yml-validator/releases) page for `VERSION` and `BINARY` parameters
 
 ### Compressed via tar.gz
 ```bash
@@ -51,11 +52,23 @@ wget https://github.com/pantheon-systems/sites-yml-validator/releases/download/$
     chmod +x /usr/bin/sites-yml-validator
 ```
 
-### Latest version
+### Latest version Linux
 
 ```bash
 wget https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_linux_amd64 -O /usr/bin/sites-yml-validator &&\
     chmod +x /usr/bin/sites-yml-validator
+```
+
+### Latest version Intel processor Mac
+
+```bash
+curl -LO https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_x86_64.tar.gz && tar -xf sites-yml-validator_Darwin_x86_64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
+```
+
+### Latest version Apple Silicon processor Mac
+
+```bash
+curl -LO https://github.com/pantheon-systems/sites-yml-validator/releases/latest/download/sites-yml-validator_Darwin_arm64.tar.gz && tar -xf sites-yml-validator_Darwin_arm64.tar.gz && sudo mv sites-yml-validator /usr/local/bin/sites-yml-validator && sudo chmod +x /usr/local/bin/sites-yml-validator
 ```
 
 ## Testing
