@@ -72,6 +72,12 @@ func TestUnMarshalConvertBool(t *testing.T) {
 			convert_to_subdirectory: "foo"`,
 			expectedErr: errors.New("unexpected type string for convert_to_subdirectory"),
 		},
+		{
+			name:        "nothing",
+			yaml:        `---`,
+			expectedErr: nil,
+			expected:    false,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			y := []byte(
