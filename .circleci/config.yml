@@ -49,7 +49,7 @@ jobs:
       - restore-go-mod-cache
       - run:
           name: lint and test
-          command: make test-circle
+          command: make test-circle && make test-coverage
       - run:
           name: Upload Coverage Results to Codacy
           command: |
