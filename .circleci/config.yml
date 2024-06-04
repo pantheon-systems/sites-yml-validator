@@ -50,6 +50,17 @@ jobs:
       - run:
           name: lint and test
           command: make test-circle
+      - run:
+          name: Upload Coverage Results to Codacy
+          command: |
+              if [ -x "$(which curl)" ]; then
+                  curl -Ls https://coverage.codacy.com/get.sh > get.sh
+              elif [ -x "$(which wget)" ] ; then
+                  wget -qO - https://coverage.codacy.com/get.sh > get.sh
+              else
+                  printf "Could not find curl or wget, please install one."
+              fi
+              source get.sh report --force-coverage-parser go -r coverage.out
   # Tag for release
   release:
     executor: go-build

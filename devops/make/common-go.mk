@@ -3,7 +3,6 @@
 # INPUT VARIABLES
 # - GOLINT_ARGS: Override the options passed to golangci-lint for linting (-v --timeout 3m by default)
 # - GOTEST_ARGS: Override the options passed by default ot go test (--race by default)
-# - COVERALLS_TOKEN: Token to use when pushing coverage to coveralls.
 #
 # - FETCH_CA_CERT: The presence of this variable will cause the root CA certs
 #                  to be downloaded to the file ca-certificates.crt before building.
@@ -16,7 +15,7 @@ deps:: deps-go
 deps-circle:: deps-circle-go deps
 lint:: lint-go
 test:: lint-go test-go-tparse
-test-circle:: test test-coveralls
+test-circle:: test-coverage-go test
 test-coverage:: test-coverage-go
 build:: $(APP)
 build-go:: $(APP)
@@ -130,14 +129,6 @@ endif
 test-coverage-go:: ## run coverage report
 	$(call INFO, "running go coverage tests with $(GO_TEST_COVERAGE_ARGS)")
 	@$(GO_TEST_COVERAGE_CMD) > /dev/null
-
-test-coveralls:: deps-coveralls-go test-coverage-go ## run coverage and report to coveralls
-ifdef COVERALLS_TOKEN
-	$(call INFO, "reporting coverage to coveralls")
-	@goveralls -repotoken $$COVERALLS_TOKEN -service=circleci -coverprofile=coverage.out > /dev/null
-else
-	$(call WARN, "You asked to use Coveralls but neglected to set the COVERALLS_TOKEN environment variable")
-endif
 
 test-coverage-html:: test-coverage ## output html coverage file
 	$(call INFO, "generating html coverage report")
