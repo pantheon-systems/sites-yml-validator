@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	maxDomainMaps          = 25 // This could be raised
+	maxDomainMaps          = 75 // This could be raised
 	validHostnameRegex     = `^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
 	validMultidevNameRegex = `^[a-z0-9\-]{1,11}$`
 )
