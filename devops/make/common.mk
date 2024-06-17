@@ -19,8 +19,11 @@ ROOT_DIR ?= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 # override to use eg your own checkout for making pr's to upstream
 COMMON_MAKE_DIR ?= $(ROOT_DIR)/devops/make
 
+# the branch or ref to get common-make updates from
+COMMON_MAKE_UPDATE_TARGET ?= master
+
 help: ## print list of tasks and descriptions
-	@grep --no-filename -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) $(filter_tasks_cmd) | sort | awk 'BEGIN {FS = ":.*?##"}; { printf "\033[36m%-30s\033[0m %s \n", $$1, $$2}'
+	@grep --no-filename -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) $(filter_tasks_cmd) | sort | uniq | awk 'BEGIN {FS = ":.*?##"}; { printf "\033[36m%-30s\033[0m %s \n", $$1, $$2}'
 .DEFAULT_GOAL := help
 
 # Invoke this with $(call INFO,<test>)
@@ -50,7 +53,7 @@ ifndef BRANCH
 endif
 
 ifndef COMMIT_NO
-  COMMIT_NO := $(shell git rev-parse --short HEAD)
+  COMMIT_NO := $(shell git rev-parse --short=8 HEAD)
 endif
 
 ifndef COMMIT
@@ -68,6 +71,19 @@ test-circle:: ## invoke test tasks for CI
 test-coverage:: ## run test coverage reports
 build:: ## run all build
 clean:: ## clean up artifacts from test and build
+format:: ## attempts to properly format or cleanup files, writing changes to disk
+
+# runs format and errors if anything has changed
+check-format: format
+	@s=$$(git status --porcelain); if [ -z "$$s" ]; then \
+  	  echo "workdir is clean"; \
+  	else \
+  	  echo "The following files have changed on disk"; \
+  	  echo "$$s"; \
+  	  git diff; \
+  	  exit 1; \
+	fi
+
 
 update-makefiles:: ## update the make subtree, assumes the subtree is in devops/make
   ifneq (, $(wildcard scripts/make))
@@ -79,12 +95,12 @@ update-makefiles:: ## update the make subtree, assumes the subtree is in devops/
 		@echo "git commit -am \"Move common_makefiles to new prefix\""
 		@exit 1
   endif
-	# best effort attempt to do one time setup
-	@set -x; if ! git remote show common_makefiles &> /dev/null; then \
-		echo "adding common_makefiles as a remote"; \
+	@if ! git remote show common_makefiles &> /dev/null; then \
+		echo "temporarily adding common_makefiles as a remote"; \
 		git remote add common_makefiles git@github.com:pantheon-systems/common_makefiles.git --no-tags; \
-		git subtree add --prefix devops/make common_makefiles master --squash &>/dev/null || true; \
+		git subtree add --prefix devops/make common_makefiles $(COMMON_MAKE_UPDATE_TARGET) --squash &>/dev/null || true; \
 	fi
-	@git subtree pull --prefix devops/make common_makefiles master --squash
+	@git subtree pull --prefix devops/make common_makefiles $(COMMON_MAKE_UPDATE_TARGET) --squash -m 'update common make'
+	@git remote remove common_makefiles
 
 .PHONY:: all help update-makefiles
