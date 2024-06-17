@@ -30,7 +30,7 @@ setup_ar_docker_repos() {
   # setup all registries to use this identity
   registries=(us-docker.pkg.dev gcr.io us.gcr.io eu.gcr.io asia.gcr.io staging-k8s.gcr.io marketplace.gcr.io)
   for i in "${registries[@]}" ; do
-    echo "$gsa" | docker login -u _json_key --password-stdin "https://$i"
+    echo "$gsa" | $DOCKER_PATH login -u _json_key --password-stdin "https://$i"
   done
 }
 
@@ -86,7 +86,7 @@ main() {
     "shared") VAULT_PATH="secret/circleci/gsa" ;;
   esac
 
-  setup_ar_docker_repos $VAULT_PATH
+  setup_ar_docker_repos "$VAULT_PATH"
 }
 
 main "$@"

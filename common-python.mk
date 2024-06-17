@@ -4,7 +4,6 @@
 # - PYTHON_PACKAGE_NAME: (required) The name of the python package.
 # - TEST_RUNNER: (optional) The name of the python test runner to execute. Defaults to `unittest`
 # - TEST_RUNNER_ARGS: (optional) Extra arguements to pass to the test runner. Defaults to `discover`
-# - COVERALLS_TOKEN: (optional) Token to use when pushing coverage to coveralls (`test-coveralls`).
 #
 #-------------------------------------------------------------------------------
 
@@ -16,15 +15,7 @@ TEST_RUNNER_ARGS ?= discover
 FLAKE8_BIN := $(shell command -v flake8;)
 PYLINT_BIN := $(shell command -v pylint;)
 COVERAGE_BIN := $(shell command -v coverage;)
-COVERALLS_BIN := $(shell command -v coveralls;)
 BUMPVERSION_BIN := $(shell command -v bumpversion;)
-
-# TODO(joe): remove after we confirm any github repos using common-python.mk have switched their circleCI config to use COVERALLS_TOKEN
-# Note to future selves: query all pantheon github repos with a `/Makefile` containing "common-python-mk": https://github.com/search?utf8=%E2%9C%93&q=org%3Apantheon-systems+common-python.mk+filename%3AMakefile+path%3A%2F&type=Code&ref=advsearch&l=&l=
-ifdef COVERALLS_REPO_TOKEN
-COVERALLS_TOKEN = $(COVERALLS_REPO_TOKEN)
-$(warning "Environment variable COVERALLS_REPO_TOKEN is deprecated, please switch this project's CI config to use COVERALLS_TOKEN instead)
-endif
 
 ## Append tasks to the global tasks
 deps:: deps-python
@@ -73,14 +64,7 @@ ifndef COVERAGE_BIN
 	pip install coverage
 endif
 
-deps-circle-python:: deps-coveralls-python ## Install python dependencies for circle
-
-deps-coveralls-python::
-ifdef COVERALLS_REPO_TOKEN
-ifndef COVERALLS_BIN
-	pip install coveralls
-endif
-endif
+deps-circle-python:: ## Install python dependencies for circle
 
 deps-bumpversion-python:
 ifndef BUMPVERSION_BIN
@@ -107,20 +91,13 @@ endif
 
 test-python:: test-coverage-python
 
-test-circle-python:: test-coveralls-python
+test-circle-python::
 
 test-coverage-python:: deps-testrunner-python deps-coverage-python ## Run tests and generate code coverage. Configuration file '.coveragerc'
 	coverage run --branch --source $(PYTHON_PACKAGE_NAME) -m $(TEST_RUNNER) $(TEST_RUNNER_ARGS) $(PYTHON_PACKAGE_NAME)
 
 coverage-report: ## Display the coverage report. Requires that make test has been run.
 	coverage report
-
-test-coveralls-python:: deps-coveralls-python ## run coverage and report to coveralls
-ifdef COVERALLS_TOKEN
-	coveralls
-else
-	$(call ERROR, "COVERALLS_TOKEN is not set. Skipping coveralls reporting")
-endif
 
 bumpmicro: bumppatch ## Bump the micro (patch) version of the python package. Configuration file '.bumpversion.cfg'
 
@@ -133,4 +110,4 @@ bumpminor: deps-bumpversion ## Bump the minor version of the python package. Con
 bumpmajor: deps-bumpversion ## Bump the major version of the python package. Configuration file '.bumpversion.cfg'
 	bumpversion major
 
-.PHONY:: deps-coverage-python deps-circle-python deps-lint-python deps-coveralls-python deps-pylint deps-flake8 test-python test-circle-python test-coveralls-python build-python test-coverage-python coverage-report test-circle test-circle-python bumpmicro bumpminor bumpmajor bumppatch
+.PHONY:: deps-coverage-python deps-circle-python deps-lint-python deps-pylint deps-flake8 test-python test-circle-python build-python test-coverage-python coverage-report test-circle test-circle-python bumpmicro bumpminor bumpmajor bumppatch

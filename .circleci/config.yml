@@ -8,10 +8,10 @@ version: 2.1
 executors:
   go-build:
     docker:
-      - image: quay.io/getpantheon/go-build:latest
+      - image: us-docker.pkg.dev/pantheon-artifacts/internal/go-build:1.21
         auth:
-          username: $QUAY_USER
-          password: $QUAY_PASSWD
+          username: _json_key
+          password: $CIRCLE_CI_COMMON_KEY
 
   deploy-toolbox:
     docker:
@@ -43,6 +43,7 @@ jobs:
       - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
       - run: make test-deps-build
       - run: make test-common-build
+      - run: NEW_TAG_STRATEGY=true make test-common-build
 
   test-deploy:
     executor: deploy-toolbox
@@ -50,11 +51,12 @@ jobs:
       - checkout
       - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
       - run: make test-deps-deploy
-      - run: make test-common-deploy
+      - run:
+          command: make test-common-deploy
+          no_output_timeout: 30m
 
   test-artifact-setup:
-    docker:
-      - image: cimg/go:1.17
+    executor: go-build
     steps:
       - checkout
       - run: echo 'export COMMON_MAKE_DIR="."' >> $BASH_ENV
@@ -78,6 +80,7 @@ workflows:
           context:
             - sig-go-release
             - docker-executor-auth
+            - gcp-credentials-ar-ci
       - test-deploy:
           context:
             - sig-go-release
@@ -87,10 +90,10 @@ workflows:
           context:
             - sig-go-release
             - docker-executor-auth
+            - gcp-credentials-ar-ci
       - autotag-release:
           context:
             - sig-go-release
-            - docker-executor-auth
             - gcp-credentials-ar-ci
           filters:
             branches:

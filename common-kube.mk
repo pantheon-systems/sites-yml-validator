@@ -145,7 +145,7 @@ clean-secrets:: ## delete local secrets
 clean-kube:: clean-secrets
 
 verify-deployment-rollout:: ## validate that deployment to kube was successful and rollback if not
-	@$(KUBECTL_CMD) rollout status deployment/$(APP) --timeout=10m \
+	@$(KUBECTL_CMD) rollout status deployment/$(APP) --timeout=15m \
 		| grep 'successfully' && echo 'Deploy succeeded.' && exit 0 \
 		|| echo 'Deploy unsuccessful. Rolling back. Investigate!' \
 			&& $(KUBECTL_CMD) rollout undo deployment/$(APP) && exit 1

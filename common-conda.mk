@@ -31,8 +31,8 @@ MINICONDA_VERSION ?= latest
 ANACONDA_CLOUD_ORGANIZATION:=pantheon
 # Default to exported environment variables if they are set and exist.
 # This approach is used in circle and local development
-ANACONDA_CLOUD_DEPLOY_TOKEN:=$(shell echo $${ANACONDA_CLOUD_DEPLOY_TOKEN})
-ANACONDA_CLOUD_REPO_TOKEN:=$(shell echo $${ANACONDA_CLOUD_REPO_TOKEN})
+ANACONDA_CLOUD_DEPLOY_TOKEN:=$(shell echo $${ANACONDA_CLOUD_DEPLOY_TOKEN:-})
+ANACONDA_CLOUD_REPO_TOKEN:=$(shell echo $${ANACONDA_CLOUD_REPO_TOKEN:-})
 # FQDN for the anaconda cloud api
 ANACONDA_CLOUD_API_FQDN:=api.anaconda.org
 # FQDN for conda packages in anaconda cloud

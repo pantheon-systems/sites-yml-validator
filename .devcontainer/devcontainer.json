@@ -1,0 +1,48 @@
+{
+	"name": "docker",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"mounts": [
+		"type=bind,source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud",
+		"type=bind,source=${localEnv:HOME}/.netrc,target=/home/vscode/.netrc,readonly",
+		"type=bind,source=${localEnv:HOME}/.pants.yaml,target=/home/vscode/.pants.yaml,readonly"
+	],
+	"onCreateCommand": [
+		"/bin/bash",
+		".devcontainer/on-create.sh"
+	],
+	"containerEnv": {
+		"COMMON_MAKE_DIR": "/workspaces/common_makefiles"
+	},
+	"customizations": {
+		"codespaces": {
+			"extensions": [
+				"davidanson.vscode-markdownlint",
+				"golang.go",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.makefile-tools",
+				"redhat.vscode-yaml"
+			],
+			"repositories": {
+				"pantheon-systems/pants": {
+					"permissions": {
+						"contents": "read"
+					}
+				}
+			}
+		},
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"davidanson.vscode-markdownlint",
+				"golang.go",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.makefile-tools",
+				"redhat.vscode-yaml"
+			]
+		}
+	},
+	"containerUser": "vscode",
+	"updateRemoteUserUID": true
+}

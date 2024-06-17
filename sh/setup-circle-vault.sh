@@ -72,7 +72,7 @@ install_vault() {
       verify_vault "${VERSION}" "${ARCH}" "${PLATFORM}"
     fi
 
-    unzip "${FILENAME}"
+    unzip "${FILENAME}" vault
     rm "${FILENAME}"
     ${SUDO} mv ./vault /usr/local/bin/vault
     vault version
@@ -95,9 +95,9 @@ install_pvault() {
   fi
 
   local PVAULT_URL="https://${GITHUB_TOKEN}:@api.github.com/repos/pantheon-systems/pvault/releases"
-  local JQ_FILTER=".[0].assets | map(select(.name|test(\"pvault.*_linux_amd64\")))[0].id"
+  local JQ_FILTER=".[0].assets | map(select(.name|test(\"pvault.*amd64.deb\")))[0].id"
   if [[ "${PVAULT_VERSION}" != "latest" ]] ; then
-    JQ_FILTER=". | map(select(.tag_name == \"v${PVAULT_VERSION}\"))[0].assets | map(select(.name|test(\"pvault_.*_linux_amd64\")))[0].id"
+    JQ_FILTER=". | map(select(.tag_name == \"v${PVAULT_VERSION}\"))[0].assets | map(select(.name|test(\"pvault.*amd64.deb\")))[0].id"
   fi
 
   local ASSET

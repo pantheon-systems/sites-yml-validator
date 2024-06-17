@@ -7,7 +7,7 @@
 #   GCLOUD_KEY             # base64 encoded key
 set -eou pipefail
 
-if [ "$CIRCLECI" != "true" ]; then
+if [ "${CIRCLECI:-}" != "true" ]; then
   echo "This script is only intended to run on Circle-CI."
   exit 1
 fi

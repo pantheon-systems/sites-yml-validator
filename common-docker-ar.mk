@@ -21,32 +21,36 @@ AR_IMAGE_BASENAME := $(firstword $(subst :, ,$(AR_IMAGE)))
 # used for testing in Makefile
 AR_REGISTRY_PATH := $(AR_REGISTRY)/$(APP)
 
+# TODO Wipe out
 ifdef CIRCLE_BUILD_NUM
 	VAULT_TOKEN = $(shell $(COMMON_MAKE_DIR)/sh/setup-circle-vault.sh 2>&1 > /dev/null; . $$BASH_ENV; echo $$VAULT_TOKEN)
 	export VAULT_TOKEN
 endif
 
-build-docker:: build-docker-ar ## build the docker container
+build-docker:: build-docker-ar
 
 build-docker-ar:: setup-ar build-linux
 	@FORCE_BUILD=$(DOCKER_FORCE_BUILD) TRY_PULL=$(DOCKER_TRY_PULL) \
+		DOCKER_PATH=$(DOCKER_PATH) \
 		$(COMMON_MAKE_DIR)/sh/build-docker.sh \
 		$(AR_IMAGE) $(DOCKER_BUILD_CONTEXT) $(DOCKER_BUILD_ARGS)
 
 ifeq ("$(DOCKER_BYPASS_DEFAULT_PUSH)", "false")
-push:: push-ar ## push the container to the registry
+push:: push-ar
 else
 push::
 endif
 
 setup-ar::
+# TODO Wipe out
 ifdef CIRCLE_BUILD_NUM
+	DOCKER_PATH=$(DOCKER_PATH) \
 	$(COMMON_MAKE_DIR)/sh/setup-circle-ar-docker.sh;
 endif
 
 push-ar:: setup-ar
 push-ar::
 	$(call INFO,"Pushing image $(AR_IMAGE)")
-	docker push $(AR_IMAGE);
+	$(DOCKER_PATH) push $(AR_IMAGE);
 
-.PHONY:: push-ar build-docker-ar
+.PHONY:: build-docker-ar push-ar setup-ar

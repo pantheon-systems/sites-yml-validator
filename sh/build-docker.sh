@@ -18,7 +18,7 @@ function build() {
     docker_build_args=("$@")
     log "building docker image $image"
     # shellcheck disable=SC2068
-    docker build --pull ${docker_build_args[@]} -t "$image" "$context"
+    $DOCKER_PATH build --pull ${docker_build_args[@]} -t "$image" "$context"
 }
 
 IMAGE="$1"
@@ -38,13 +38,13 @@ if [[ $FORCE_BUILD == true ]]; then
     build "$IMAGE" "$CONTEXT" "$DOCKER_BUILD_ARGS"
     exit
 fi
-if [[ $(docker images -q "$IMAGE" | wc -l) -gt 0 ]]; then
+if [[ $($DOCKER_PATH images -q "$IMAGE" | wc -l) -gt 0 ]]; then
     log "found $IMAGE locally, not building"
     exit
 fi
 if [[ $TRY_PULL == true ]]; then
     log "attempting to pull docker image $IMAGE"
-    docker pull "$IMAGE" &>/dev/null && exit;
+    $DOCKER_PATH pull "$IMAGE" &>/dev/null && exit;
     log "unable to pull image, proceeding to build"
 fi
 build "$IMAGE" "$CONTEXT" "$DOCKER_BUILD_ARGS"

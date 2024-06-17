@@ -5,3 +5,6 @@
 # owned by #sig-go
 *.go         @pantheon-systems/sig-go
 common-go.mk @pantheon-systems/sig-go
+
+# Doug is temporary devcontainer SME until a suitable group is found/formed
+.devcontainers/ @djschaap @pantheon-systems/engops @pantheon-systems/sig-go

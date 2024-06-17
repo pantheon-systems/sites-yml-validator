@@ -26,22 +26,25 @@ QUAY_IMAGE_BASENAME := $(IMAGE_BASENAME)
 
 REGISTRY_PATH := $(REGISTRY)/$(APP)
 
-build-docker:: build-docker-quay ## build the docker container
+build-docker:: build-docker-quay
 
 build-docker-quay:: setup-quay build-linux
 	@FORCE_BUILD=$(DOCKER_FORCE_BUILD) TRY_PULL=$(DOCKER_TRY_PULL) \
+		DOCKER_PATH=$(DOCKER_PATH) \
 		$(COMMON_MAKE_DIR)/sh/build-docker.sh \
 		$(IMAGE) $(DOCKER_BUILD_CONTEXT) $(DOCKER_BUILD_ARGS)
 
 ifeq ("$(DOCKER_BYPASS_DEFAULT_PUSH)", "false")
-push:: push-quay ## push the container to the registry
+push:: push-quay
 else
 push::
 endif
 
 push-quay:: setup-quay
-	$(call INFO,"pushing image $(IMAGE)")
-	@docker push $(IMAGE)
+	$(call INFO, "pushing image $(IMAGE)")
+	$(call WARN, "Quay is deprecated. Please migrate to Google Artifact Registry.")
+	@$(DOCKER_PATH) push $(IMAGE)
+	$(call WARN, "Quay is deprecated. Please migrate to Google Artifact Registry.")
 
 setup-quay::
 	# setup docker login for quay.io
@@ -59,4 +62,4 @@ else
 	$(call INFO, "We will fail if the docker config.json does not have the quay credentials.")
 endif
 
-.PHONY:: setup-quay build-docker-quay push-quay lint-hadolint
+.PHONY:: build-docker-quay push-quay setup-quay

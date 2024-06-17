@@ -26,12 +26,18 @@ if ! command -v pants >/dev/null; then
 
   PANTS_URL="https://$GITHUB_TOKEN:@api.github.com/repos/pantheon-systems/pants/releases"
 
+  PANTS_JSON=$(curl -fsS "$PANTS_URL" || true)
+  if [[ -z "${PANTS_JSON}" ]] ; then
+    echo "Unable to retrieve pants release catalog"
+    exit 1
+  fi
+
   JQ_FILTER=".[0].assets | map(select(.name|test(\"pants_.*_linux_amd64\")))[0].id"
   if [[ $PANTS_VERSION_CONSTRAINT != "latest" ]]; then
     JQ_FILTER=". | map(select(.tag_name == \"v$PANTS_VERSION_CONSTRAINT\"))[0].assets | map(select(.name|test(\"pants_.*_linux_amd64\")))[0].id"
   fi
 
-  ASSET=$(curl -s "$PANTS_URL" | jq -r "$JQ_FILTER")
+  ASSET=$(echo "${PANTS_JSON}" | jq -r "$JQ_FILTER")
   if [[ "$ASSET" == "null" ]]; then
     echo "Asset Not Found"
     exit 1

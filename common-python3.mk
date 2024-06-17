@@ -5,6 +5,10 @@
 #	- IMAGE: (required) The docker image to use.
 #-------------------------------------------------------------------------------
 
+
+# DOCKER_PATH can be used to override the path to the docker command (i.e., "podman --remote").
+DOCKER_PATH ?= docker
+
 export PATH := $(PATH):$(HOME)/.local/bin
 
 deps:: deps-python3
@@ -17,7 +21,7 @@ lint-python3:
 	pipenv run pylint $(PYTHON_PACKAGE_NAME)
 
 test-python3-docker:
-	docker run $(IMAGE) .venv/bin/python setup.py test
+	$(DOCKER_PATH) run $(IMAGE) .venv/bin/python setup.py test
 
 deps-python3:
 	pip3 install pipenv --user

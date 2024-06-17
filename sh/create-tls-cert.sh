@@ -8,7 +8,7 @@
 
 # Optional environment vars:
 #   DIRECTORY: Directory to store downloaded certs in. Defaults to current dir ('.')
-#   CA_HOST: Defaults to 'cimt.getpantheon.com' (production CA). Use your onebox address to create a development/sandbox cert.
+#   CA_HOST: Defaults to 'cimt.getpantheon.com' (production CA) 
 #   SANS: SubjectAltNames to add to the cert. The CN will automatically be added to the SAN list so you don't need to add it.
 #         The format is OpenSSL's SAN format documented here: https://www.openssl.org/docs/man1.0.2/apps/x509v3_config.html (Subject Alt Name section)
 #         Example - 1 DNS name, 1 ipv4 address, 1 ipv6 address:
@@ -19,7 +19,6 @@
 #   CASSANDRA_CA_KEY_FILE: Full path to the key file, used to generate the certs, when CASSANDRA=yes
 #
 #   Notes on Cassandra flags:
-#   - If USE_ONEBOX_CA=true and CASSANDRA=true, then the CA `onebox_cassandra_ca.{crt,key} will be used.
 #   - Currently Valhalla Cassandra shares a CA, in future we would like to have each one use a separate CA.
 #
 # Usage examples:
@@ -31,10 +30,6 @@
 #   - Add SubjectAltNames "foobar.com", and IP "10.0.0.1":
 #
 #       CN=foo OU=bar FILENAME=mycert SANS="DNS:foobar.com;IP:10.0.0.1" bash ./create-tls-cert.sh
-#
-#   - Issue a development certificate from a onebox (any onebox can be used, so use yours if you have one):
-#
-#       CA_HOST=onebox CN=foo OU=bar FILENAME=mycert bash ./create-tls-cert.sh
 #
 #   - Generate certs for use by Cassandra, using the Ygg CA (Valhalla make commands use this)
 #
@@ -54,19 +49,12 @@ FILENAME="${FILENAME:-}"
 OU="${OU:-}"
 CN="${CN:-}"
 SANS="${SANS:-}"
-USE_ONEBOX_CA="${USE_ONEBOX_CA:-false}"
 CA_CERT_FILE="/etc/pantheon/ca.crt"
 CA_KEY_FILE="/etc/pantheon/ca.key"
 CASSANDRA="${CASSANDRA:-}"
 CASSANDRA_CA_CERT_FILE="${CASSANDRA_CA_CERT_FILE:-}"
 CASSANDRA_CA_KEY_FILE="${CASSANDRA_CA_KEY_FILE:-}"
 
-if [[ "$USE_ONEBOX_CA" == "true" ]]; then
-    CA_CERT_FILE="/etc/pantheon/onebox_ca.crt"
-    CA_KEY_FILE="/etc/pantheon/onebox_ca.key"
-    CASSANDRA_CA_CERT_FILE="/etc/pantheon/onebox_cassandra_ca.crt"
-    CASSANDRA_CA_KEY_FILE="/etc/pantheon/onebox_cassandra_ca.key"
-fi
 if [[ "$CASSANDRA" == "true" ]]; then
     CA_CERT_FILE="${CASSANDRA_CA_CERT_FILE}"
     CA_KEY_FILE="${CASSANDRA_CA_KEY_FILE}"

@@ -11,11 +11,10 @@
 #	PANTS_SANDBOX_NAME		# Name of sandbox. Default is ${APP}-${BUILD_NUM}.
 #
 PANTS_VERSION_CONSTRAINT  ?= latest
-PANTS_UPDATE_ONEBOX       ?= false
 PANTS_SANDBOX_NAME        ?= $(shell echo $(KUBE_NAMESPACE) | tr A-Z a-z) # lowercased for compatibility
 PANTS_SANDBOX_CLUSTER     ?= $(KUBE_CONTEXT)
 PANTS_DEBUG               ?= false
-PANTS_FLAGS               ?= -s $(PANTS_SANDBOX_NAME) --update-onebox=$(PANTS_UPDATE_ONEBOX) --target-cluster=$(PANTS_SANDBOX_CLUSTER) --skip-machines
+PANTS_FLAGS               ?= -s $(PANTS_SANDBOX_NAME) --target-cluster=$(PANTS_SANDBOX_CLUSTER) --skip-machines
 
 ifdef PANTS_INCLUDE
   PANTS_FLAGS += -i $(PANTS_INCLUDE)
