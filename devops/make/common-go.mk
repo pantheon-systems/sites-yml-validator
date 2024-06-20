@@ -3,7 +3,6 @@
 # INPUT VARIABLES
 # - GOLINT_ARGS: Override the options passed to golangci-lint for linting (-v --timeout 3m by default)
 # - GOTEST_ARGS: Override the options passed by default ot go test (--race by default)
-# - COVERALLS_TOKEN: Token to use when pushing coverage to coveralls.
 #
 # - FETCH_CA_CERT: The presence of this variable will cause the root CA certs
 #                  to be downloaded to the file ca-certificates.crt before building.
@@ -16,11 +15,12 @@ deps:: deps-go
 deps-circle:: deps-circle-go deps
 lint:: lint-go
 test:: lint-go test-go-tparse
-test-circle:: test test-coveralls
+test-circle:: test
 test-coverage:: test-coverage-go
 build:: $(APP)
 build-go:: $(APP)
 clean:: clean-go
+format:: format-go
 
 ifndef GOLINT_ARGS
   GOLINT_ARGS := -v --timeout 3m
@@ -70,9 +70,17 @@ deps-go:: deps-lint ## install dependencies for project assumes you have go bina
 ifneq (,$(wildcard vendor))
 	@find  ./vendor/* -maxdepth 0 -type d -exec rm -rf "{}" \; || true
 endif
-	$(call INFO, "restoring dependencies using modules via: go get $(GO_GET_ARGS)")
-	@GO111MODULE=on go get $(GO_GET_ARGS)
+	$(call INFO, "restoring dependencies using modules via: go mod download $(GO_GET_ARGS)")
+	@GO111MODULE=on go mod download $(GO_GET_ARGS)
 
+format-go:
+	$(call INFO, "cleaning up go.mod")
+	@go mod tidy
+	$(call INFO, "formatting go-code")
+	@go fmt
+	$(call INFO, "running golangci-lint with fixes")
+	@# TODO: call lint-go
+	@golangci-lint run -E goimports --fix $(GOLINT_ARGS)
 
 lint-go:: deps-go deps-lint
 	$(call INFO, "scanning source with golangci-lint")
@@ -109,12 +117,6 @@ else
   endif
 endif
 
-deps-coveralls-go:: ## install goveralls for sending go test coverage reports to Coveralls.io
-ifeq (, $(shell command -v goveralls;))
-	$(call INFO, "installing goveralls")
-	@GO111MODULE=off go get github.com/mattn/goveralls > /dev/null
-endif
-
 deps-status:: ## check status of deps with gostatus
 ifeq (, $(shell command -v gostatus;))
 	$(call INFO, "installing gostatus")
@@ -131,14 +133,6 @@ test-coverage-go:: ## run coverage report
 	$(call INFO, "running go coverage tests with $(GO_TEST_COVERAGE_ARGS)")
 	@$(GO_TEST_COVERAGE_CMD) > /dev/null
 
-test-coveralls:: deps-coveralls-go test-coverage-go ## run coverage and report to coveralls
-ifdef COVERALLS_TOKEN
-	$(call INFO, "reporting coverage to coveralls")
-	@goveralls -repotoken $$COVERALLS_TOKEN -service=circleci -coverprofile=coverage.out > /dev/null
-else
-	$(call WARN, "You asked to use Coveralls but neglected to set the COVERALLS_TOKEN environment variable")
-endif
-
 test-coverage-html:: test-coverage ## output html coverage file
 	$(call INFO, "generating html coverage report")
 	@go tool cover -html=coverage.out > /dev/null
@@ -153,5 +147,5 @@ ifdef FETCH_CA_CERT
 	@curl -s -L https://curl.haxx.se/ca/cacert.pem -o ca-certificates.crt > /dev/null
 endif
 
-.PHONY:: _fetch-cert test-coverage-html test-coveralls deps-status deps-coveralls-go deps-circle deps-go deps-lint \
+.PHONY:: _fetch-cert test-coverage-html deps-status deps-circle deps-go deps-lint \
 	lint-go test-circle test-go build-circle build-linux build-go clean-go

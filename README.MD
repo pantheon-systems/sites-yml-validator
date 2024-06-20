@@ -2,6 +2,8 @@
 
 [![Early Access](https://img.shields.io/badge/Pantheon-Early_Access-yellow?logo=pantheon&color=FFDC28)](https://docs.pantheon.io/oss-support-levels#early-access)
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a16739ac87e496c80e9578e64ab79ca)](https://app.codacy.com/gh/pantheon-systems/sites-yml-validator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 A utility for validating a `sites.yml` file on a Pantheon site during a WordPress multisite's search and replace tasks. For more information, see [Pantheon's Multisite Docs](https://docs.pantheon.io/guides/multisite/search-replace/).
 
 ## Usage
@@ -72,8 +74,6 @@ curl -LO https://github.com/pantheon-systems/sites-yml-validator/releases/latest
 ```
 
 ## Testing
-
-[![Coverage Status](https://coveralls.io/repos/github/pantheon-systems/sites-yml-validator/badge.svg?t=PGhafd)](https://coveralls.io/github/pantheon-systems/sites-yml-validator)
 
 `make test` runs linting and testing.
 
