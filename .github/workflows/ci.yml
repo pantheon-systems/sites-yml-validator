@@ -124,3 +124,10 @@ jobs:
 
       # CircleCI used the curl installer; here we use the official action
       - name: GoReleaser release
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean --parallelism=2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
