@@ -5,3 +5,7 @@
 dist/
 
 *.out
+
+# Local dev
+.idea
+.codacy

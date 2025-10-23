@@ -1,0 +1,126 @@
+name: Go CI (build, test, release)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed for pushing tags & creating releases
+
+env:
+  # Adjust if you need a different Go version
+  GO_VERSION: "1.21"
+
+jobs:
+  update-mod-cache:
+    name: Update module cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Go (${{ env.GO_VERSION }})
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Verify Go
+        run: go version
+
+      - name: Download modules
+        run: go mod download
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: update-mod-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Build
+        run: make build
+
+  test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    needs: update-mod-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Lint and Test
+        run: |
+          make test-circle
+          make test-coverage
+        # ensure your Makefile writes coverage to ./coverage.out
+
+      - name: Upload coverage to Codacy
+        if: success()
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: |
+          set -euo pipefail
+          if command -v curl >/dev/null 2>&1; then
+            curl -Ls https://coverage.codacy.com/get.sh -o get.sh
+          elif command -v wget >/dev/null 2>&1; then
+            wget -qO get.sh https://coverage.codacy.com/get.sh
+          else
+            echo "Neither curl nor wget found." >&2
+            exit 1
+          fi
+          # Matches CircleCI script: force Go parser and point at coverage.out
+          bash get.sh report --force-coverage-parser go -r coverage.out
+
+  release:
+    name: Tag & Release (main)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout (with history for tags)
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      # Equivalent to your "configure-https-git"
+      - name: Configure git user & HTTPS remote with token
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+
+      # CircleCI runs `autotag`; here we install and run it
+      - name: Install autotag
+        run: |
+          go install github.com/pantheon-systems/autotag@latest
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+
+      - name: Create tag (autotag)
+        run: |
+          autotag
+          git push origin --tags
+
+      # CircleCI used the curl installer; here we use the official action
+      - name: GoReleaser release
