@@ -1,0 +1,104 @@
+name: Build, Test, and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Run build job (normally PR-only)'
+        type: boolean
+        default: false
+  # Uncomment after review and testing:
+  # push:
+  #   branches: [main]
+  # pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions: {}
+
+jobs:
+  deps-lint-test:
+    permissions:
+      contents: read
+      id-token: write
+    uses: pantheon-systems/common-gh/.github/workflows/go-deps-lint-test.yaml@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+    with:
+      runner: 'sbx-pan-go-1-25'
+
+  build:
+    permissions:
+      contents: read
+      id-token: write
+    if: github.event_name == 'pull_request' || inputs.force_build == true
+    needs: [deps-lint-test]
+    runs-on: sbx-pan-go-1-25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - uses: pantheon-systems/common-gh/go-internal-goproxy@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+        id: go-internal
+
+      - name: Build
+        run: make build
+        env:
+          GOPROXY: ${{ steps.go-internal.outputs.goproxy }}
+
+  test-coverage:
+    permissions:
+      contents: read
+      id-token: write
+    needs: [deps-lint-test]
+    runs-on: sbx-pan-go-1-25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: pantheon-systems/common-gh/go-internal-goproxy@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+        id: go-internal
+
+      - name: Generate coverage report
+        run: make test-coverage
+        env:
+          GOPROXY: ${{ steps.go-internal.outputs.goproxy }}
+
+      - uses: pantheon-systems/common-gh/get-repo-codacy-secret@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+        id: codacy
+
+      - name: Upload coverage to Codacy
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report --force-coverage-parser go -r coverage.out
+        env:
+          CODACY_PROJECT_TOKEN: ${{ steps.codacy.outputs.secret }}
+
+  release:
+    permissions:
+      contents: write
+      id-token: write
+    if: github.ref == 'refs/heads/main'
+    needs: [deps-lint-test]
+    runs-on: sbx-pan-go-1-25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - uses: pantheon-systems/common-gh/go-internal-goproxy@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+        id: go-internal
+
+      - uses: pantheon-systems/common-gh/tag@590023b2a70666263460bceabf1a5081f33b8554 # main 2026-04-03T15:47:41Z
+        id: tag
+
+      - name: Release
+        uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6.4.0
+        with:
+          args: release --parallelism 2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GOPROXY: ${{ steps.go-internal.outputs.goproxy }}
