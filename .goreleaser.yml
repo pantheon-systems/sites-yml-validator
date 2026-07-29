@@ -1,4 +1,6 @@
 ---
+version: 2
+
 project_name: sites-yml-validator
 
 before:
@@ -14,7 +16,7 @@ builds:
       - darwin
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
       {{ .ProjectName }}_
@@ -26,14 +28,14 @@ archives:
     # use zip for windows archives
     format_overrides:
     - goos: windows
-      format: zip
+      formats: [zip]
     files:
         # https://goreleaser.com/customization/archive/#packaging-only-the-binaries
         - none*
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 # configure what shows up in the changelog
 changelog:
   sort: asc

@@ -1,0 +1,13 @@
+version: "2"
+
+linters:
+  exclusions:
+    rules:
+      # error-string style predates this lint config; fixing would change
+      # user-facing error messages
+      - linters: [staticcheck]
+        text: "ST1005:"
+
+formatters:
+  enable:
+    - goimports
