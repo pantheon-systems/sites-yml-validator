@@ -86,7 +86,7 @@ jobs:
 
       - name: Tag release
         run: |
-          curl -sL https://github.com/pantheon-systems/autotag/releases/download/v1.4.3/autotag_linux_amd64 -o /usr/local/bin/autotag
+          curl -sL https://github.com/autotag-dev/autotag/releases/download/v1.4.3/autotag_linux_amd64 -o /usr/local/bin/autotag
           chmod +x /usr/local/bin/autotag
           autotag
           git push --tags
