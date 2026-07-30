@@ -85,11 +85,9 @@ jobs:
           go-version-file: go.mod
 
       - name: Tag release
-        run: |
-          curl -sL https://github.com/autotag-dev/autotag/releases/download/v1.4.3/autotag_linux_amd64 -o /usr/local/bin/autotag
-          chmod +x /usr/local/bin/autotag
-          autotag
-          git push --tags
+        uses: pantheon-systems/action-autotag@2c38d4e46499ae4c6c3bb11562ec264839ce6105 # v1.2.0
+        with:
+          create-release: false
 
       - name: Release
         uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6.4.0
